@@ -29,4 +29,17 @@ export class UserController {
       ),
     });
   };
+  putUser: Handler = async (req, res) => {
+    const { id, name, surname, date, gender, biography } = req.body;
+    res.json({
+      user: await this.userService.update(
+        id,
+        name,
+        surname,
+        date,
+        gender,
+        biography
+      ),
+    });
+  };
 }
