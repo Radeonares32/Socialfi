@@ -8,13 +8,16 @@ export interface UserRepository {
     name: string,
     surname: string,
     date: string,
-    gender: string
+    gender: string,
+    biography:string
   ): Promise<{ message: string }>;
   create(
     id: string,
     name: string,
     surname: string,
     date: string,
-    gender: string
+    gender: string,
+    biography:string
   ): Promise<{ message: string }>;
+  delete(id: string): Promise<{ message: string }>;
 }
