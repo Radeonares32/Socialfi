@@ -21,7 +21,21 @@ export class UserDal implements UserRepository {
     });
   }
   find(id: string): Promise<IUser> {
-    throw new Error("Method not implemented.");
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user: any = await neo4j()
+          ?.readCypher("match(u:user {id:$id}) return u", { id })
+          .catch((err) => console.log(err));
+        const rUser = user.records.map((uss: any) => {
+          return uss.map((res: any) => {
+            return res;
+          });
+        });
+        resolve(rUser as IUser);
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
   }
   update(
     id: string,
