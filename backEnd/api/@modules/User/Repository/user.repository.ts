@@ -7,7 +7,6 @@ export interface UserRepository {
     id: string,
     name: string,
     surname: string,
-    image: string,
     date: string,
     gender: string
   ): Promise<{ message: string }>;
@@ -15,7 +14,6 @@ export interface UserRepository {
     id: string,
     name: string,
     surname: string,
-    image: string,
     date: string,
     gender: string
   ): Promise<{ message: string }>;

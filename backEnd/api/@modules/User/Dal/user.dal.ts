@@ -41,17 +41,26 @@ export class UserDal implements UserRepository {
     id: string,
     name: string,
     surname: string,
-    image: string,
     date: string,
     gender: string
   ): Promise<{ message: string }> {
-    throw new Error("Method not implemented.");
+    return new Promise(async (resolve, reject) => {
+        try {
+          await neo4j()
+            ?.writeCypher("match(u:user {id:$id}) set u.name=$name,u.surname=$surname return u", { id })
+            .catch((err) => console.log(err));
+          
+          resolve({message:"success updated"});
+        } catch (err) {
+          reject({ message: err });
+        }
+      });
   }
   create(
     id: string,
     name: string,
     surname: string,
-    image: string,
+    
     date: string,
     gender: string
   ): Promise<{ message: string }> {
