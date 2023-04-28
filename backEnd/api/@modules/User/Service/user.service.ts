@@ -28,14 +28,8 @@ export class UserService {
       gender,
       biography
     );
-    if (user.message) {
-      return {
-        user: user.message,
-      };
-    } else {
-      return {
-        user,
-      };
-    }
+    return {
+      user: user.message,
+    };
   }
 }
