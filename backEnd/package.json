@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsc-watch --onSuccess",
-    "start:prod": "SET NODE_ENV=production node ./dist/server.js",
-    "start:dev": "SET NODE_ENV=development node ./dist/server.js"
+    "start:prod": "NODE_ENV=production node ./dist/server.js",
+    "start:dev": "NODE_ENV=development node ./dist/server.js"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
