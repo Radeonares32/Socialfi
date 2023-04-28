@@ -42,14 +42,15 @@ export class UserDal implements UserRepository {
     name: string,
     surname: string,
     date: string,
-    gender: string
+    gender: string,
+    biography: string
   ): Promise<{ message: string }> {
     return new Promise(async (resolve, reject) => {
       try {
         await neo4j()
           ?.writeCypher(
-            "match(u:user {id:$id}) set u.name=$name,u.surname=$surname u.date=$date,u.gender=$gender",
-            { id, name, surname, date, gender }
+            "match(u:user {id:$id}) set u.name=$name,u.surname=$surname u.date=$date,u.gender=$gender,u.biography=$biography",
+            { id, name, surname, date, gender, biography }
           )
           .catch((err) => console.log(err));
 
@@ -64,14 +65,15 @@ export class UserDal implements UserRepository {
     name: string,
     surname: string,
     date: string,
-    gender: string
+    gender: string,
+    biography: string
   ): Promise<{ message: string }> {
     return new Promise(async (resolve, reject) => {
       try {
         await neo4j()
           ?.writeCypher(
-            "create(:user {id:$id,name:$name,surname:$surname,date:$date,gender:$gender})",
-            { id, name, surname, date, gender }
+            "create(:user {id:$id,name:$name,surname:$surname,date:$date,gender:$gender,biography:$biography})",
+            { id, name, surname, date, gender, biography }
           )
           .catch((err) => console.log(err));
 
