@@ -17,4 +17,5 @@ export interface UserRepository {
     date: string,
     gender: string
   ): Promise<{ message: string }>;
+  delete(id:string):Promise<{message:string}>
 }
