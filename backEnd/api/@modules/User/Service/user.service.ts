@@ -20,16 +20,17 @@ export class UserService {
     gender: string,
     biography: string
   ) {
-    const user = await this.userDataAccess.update(
-      id,
-      name,
-      surname,
-      date,
-      gender,
-      biography
-    );
     return {
-      user: user.message,
+      user: (
+        await this.userDataAccess.update(
+          id,
+          name,
+          surname,
+          date,
+          gender,
+          biography
+        )
+      ).message,
     };
   }
   async create(
@@ -40,16 +41,22 @@ export class UserService {
     gender: string,
     biography: string
   ) {
-    const user = await this.userDataAccess.create(
-      id,
-      name,
-      surname,
-      date,
-      gender,
-      biography
-    );
     return {
-      user: user.message,
+      user: (
+        await this.userDataAccess.create(
+          id,
+          name,
+          surname,
+          date,
+          gender,
+          biography
+        )
+      ).message,
+    };
+  }
+  async delete(id: string) {
+    return {
+      user: (await this.userDataAccess.delete(id)).message,
     };
   }
 }
