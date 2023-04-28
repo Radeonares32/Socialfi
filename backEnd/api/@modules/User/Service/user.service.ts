@@ -32,4 +32,24 @@ export class UserService {
       user: user.message,
     };
   }
+  async create(
+    id: string,
+    name: string,
+    surname: string,
+    date: string,
+    gender: string,
+    biography: string
+  ) {
+    const user = await this.userDataAccess.create(
+      id,
+      name,
+      surname,
+      date,
+      gender,
+      biography
+    );
+    return {
+      user: user.message,
+    };
+  }
 }
