@@ -28,7 +28,7 @@ export class UserDal implements UserRepository {
           .catch((err) => console.log(err));
         const rUser = user.records.map((uss: any) => {
           return uss.map((res: any) => {
-            return res;
+            return res.properties;
           });
         });
         resolve(rUser as IUser);

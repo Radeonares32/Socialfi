@@ -13,7 +13,7 @@ export class UserController {
   getUser: Handler = async (req, res) => {
     const { id } = req.params as any;
     res.json({
-      user: this.userService.find(id).user,
+      user: (await this.userService.find(id)).user,
     });
   };
   postUser: Handler = async (req, res) => {
