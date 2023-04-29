@@ -7,9 +7,9 @@ export class UserService {
       user: this.userDataAccess.findAll(),
     };
   }
-  find(id: string) {
+  async find(id: string) {
     return {
-      user: this.userDataAccess.find(id),
+      user: await (this.userDataAccess.find(id)),
     };
   }
   async update(
