@@ -87,7 +87,7 @@ export class UserDal implements UserRepository {
     return new Promise(async (resolve, reject) => {
       try {
         await neo4j()
-          ?.writeCypher("match(:user {id:$id}) detach delete u", { id })
+          ?.writeCypher("match(u:user {id:$id}) detach delete u", { id })
           .catch((err) => console.log(err));
         resolve({ message: "success deleted" });
       } catch (err) {
