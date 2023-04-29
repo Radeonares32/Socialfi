@@ -49,7 +49,7 @@ export class UserDal implements UserRepository {
       try {
         await neo4j()
           ?.writeCypher(
-            "match(u:user {id:$id}) set u.name=$name,u.surname=$surname u.date=$date,u.gender=$gender,u.biography=$biography",
+            "match(u:user {id:$id}) set u.name=$name,u.surname=$surname,u.date=$date,u.gender=$gender,u.biography=$biography",
             { id, name, surname, date, gender, biography }
           )
           .catch((err) => console.log(err));
@@ -87,7 +87,7 @@ export class UserDal implements UserRepository {
     return new Promise(async (resolve, reject) => {
       try {
         await neo4j()
-          ?.writeCypher("match(:user {id:$id}) detach delete u", { id })
+          ?.writeCypher("match(u:user {id:$id}) detach delete u", { id })
           .catch((err) => console.log(err));
         resolve({ message: "success deleted" });
       } catch (err) {
