@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { SigningCosmosClient } from "@cosmjs/launchpad";
+import { useSignIn } from 'react-auth-kit'
+import axios from 'axios'
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 export const Navbar = () => {
+  const signIn = useSignIn()
   const chainId = "cosmoshub-4";
   const [account, setAccount] = useState<string | null>(null);
   const keplrClick = async () => {
@@ -12,12 +15,16 @@ export const Navbar = () => {
       await window.keplr.enable(chainId);
       const offlineSigner = window.keplr.getOfflineSigner(chainId);
       const accounts = await offlineSigner.getAccounts();
-      setAccount(accounts[0].address);
+      setAccount(accounts[0].address)
       const cosmJS = new SigningCosmosClient(
         "https://lcd-cosmoshub.keplr.app",
         accounts[0].address,
         offlineSigner
       );
+      const token = await axios.post('localhost:3000/user/signWallet',{
+        walletAddr:accounts[0].address
+      })
+      console.log(token.data)
     } else {
       alert("Keplr is not installed!");
     }

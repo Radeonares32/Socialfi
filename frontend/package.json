@@ -12,6 +12,7 @@
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "axios": "^1.4.0",
     "react": "^18.2.0",
     "react-auth-kit": "^2.12.2",
     "react-dom": "^18.2.0",
@@ -45,6 +46,7 @@
     ]
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "buffer": "^6.0.3"
   }
 }
