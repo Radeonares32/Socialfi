@@ -6,7 +6,7 @@ export class NotificationController {
     private notificationService:NotificaitonService = new NotificaitonService()
 
     getNotifications:Handler = async (req,res) => {
-        const  token:any  = req.headers['x-access-token']
+        const  token  = req.headers['x-access-token'] as string
         res.json({
             notification:(await (this.notificationService.findAll(token))).notification
         })
