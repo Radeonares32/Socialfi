@@ -13,10 +13,11 @@ export class NotificaitonService {
     };
   }
   async find(id: string, walletAddr: string) {
-    const verifyWalletAddr = security.jwt.token.verifyToken(walletAddr); 
+    const verifyWalletAddr = security.jwt.token.verifyToken(walletAddr);
     return {
       notification: await this.notificationDataAccess.find(id, verifyWalletAddr.token?.payload?.walletAddr as string),
     };
+   
   }
   async create(
     title: string,

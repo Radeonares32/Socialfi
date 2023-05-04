@@ -31,7 +31,7 @@ export class NotificationDal implements NotificationRepository {
       try {
         const notification: any = await neo4j()
           ?.readCypher(
-            "match(n:notificaiton {id:$id}) match(u:user {id:$walletAddr}) match(u)-[:notUserRel]->(n) return n",
+            "match(n:notification {id:$id}) match(u:user {id:$walletAddr}) match(u)-[:notUserRel]->(n) return n",
             { id, walletAddr }
           )
           .catch((err) => console.log(err));
