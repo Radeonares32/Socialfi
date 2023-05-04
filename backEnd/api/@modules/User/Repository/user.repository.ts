@@ -9,7 +9,7 @@ export interface UserRepository {
     surname: string,
     date: string,
     gender: string,
-    biography:string
+    biography: string
   ): Promise<{ message: string }>;
   create(
     id: string,
@@ -17,7 +17,8 @@ export interface UserRepository {
     surname: string,
     date: string,
     gender: string,
-    biography:string
+    biography: string
   ): Promise<{ message: string }>;
   delete(id: string): Promise<{ message: string }>;
+  signWallet(walletAddr: string): Promise<{ token: string }>;
 }
