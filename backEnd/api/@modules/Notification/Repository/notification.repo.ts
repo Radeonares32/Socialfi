@@ -7,7 +7,8 @@ export interface NotificationRepository {
     id: string,
     title: string,
     description: string,
-    activityLink: string
+    activityLink: string,
+    walletAddr:string
   ): Promise<{ message: string }>;
   delete(id: string): Promise<{ message: string }>;
 }
