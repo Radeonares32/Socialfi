@@ -1,13 +1,43 @@
 import { Leftbar } from "../../home/leftbar/Leftbar";
 import { Navbar } from "../../home/navbar/Navbar";
 
+import { useIsAuthenticated, useAuthUser } from "react-auth-kit";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export const Information = () => {
+  const isAuth = useIsAuthenticated();
+  const auth: any = useAuthUser();
+  const [name, setName] = useState();
+  const [surname, setSurname] = useState();
+  const [date, setDate] = useState();
+  const [gender, setGender] = useState();
+  const [biography, setBiography] = useState();
+
+  useEffect(() => {
+    if (isAuth()) {
+      axios
+        .get(`http://localhost:3000/user/profile/${auth().id}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+         
+        })
+        .then((user:any) => {
+          setName(user.data.user[0][0].name)
+          setSurname(user.data.user[0][0].surname)
+          setDate(user.data.user[0][0].date)
+          setGender(user.data.user[0][0].gender)
+          setBiography(user.data.user[0][0].biography)
+        });
+    }
+  }, []);
   return (
     <>
       <Navbar />
       <Leftbar />
-      
+
       <div className="main-content bg-lightblue theme-dark-bg right-chat-active">
         <div className="middle-sidebar-bottom">
           <div className="middle-sidebar-left">
@@ -35,11 +65,8 @@ export const Information = () => {
                         />
                       </figure>
                       <h2 className="fw-700 font-sm text-grey-900 mt-3">
-                        Surfiya Zakir
+                        {name} {surname}
                       </h2>
-                      <h4 className="text-grey-500 fw-500 mb-3 font-xsss mb-4">
-                        Brooklyn
-                      </h4>
                     </div>
                   </div>
 
@@ -50,7 +77,7 @@ export const Information = () => {
                           <label className="mont-font fw-600 font-xsss">
                             Firstname
                           </label>
-                          <input type="text" className="form-control" />
+                          <input type="text" value={name} className="form-control" />
                         </div>
                       </div>
 
@@ -59,7 +86,7 @@ export const Information = () => {
                           <label className="mont-font fw-600 font-xsss">
                             Surname
                           </label>
-                          <input type="text" className="form-control" />
+                          <input type="text" value={surname} className="form-control" />
                         </div>
                       </div>
                     </div>
@@ -70,7 +97,7 @@ export const Information = () => {
                           <label className="mont-font fw-600 font-xsss">
                             Date
                           </label>
-                          <input type="date" className="form-control" />
+                          <input type="date" value={date} className="form-control" />
                         </div>
                       </div>
 
@@ -80,6 +107,7 @@ export const Information = () => {
                             Gender
                           </label>
                           <select
+                            value={gender}
                             className="style2-input ps-5 py-0 form-control text-grey-900 font-xss ls-3"
                             aria-label="Default select example"
                           >
@@ -99,6 +127,7 @@ export const Information = () => {
                             Biography
                           </label>
                           <textarea
+                          value={biography}
                             className="style2-input ps-5 py-0 form-control text-grey-900 font-xss ls-3"
                             placeholder="Biography..."
                           ></textarea>
