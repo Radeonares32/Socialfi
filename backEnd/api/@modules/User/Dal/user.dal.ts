@@ -128,23 +128,33 @@ export class UserDal implements UserRepository {
   ): Promise<{ token: string } | { message: string }> {
     return new Promise(async (resolve, reject) => {
       try {
-        const user = await this.create(
-          walletAddr,
-          name,
-          surname,
-          date,
-          gender,
-          biography
-        );
-        if (user.message === "success created") {
-          const token = security.jwt.payload.signPayload({ walletAddr });
-          if (token.payload) {
-            resolve({ token: token.payload, message: "1" });
+        const isUser: any = await this.find(walletAddr);
+        if (isUser.length > 0) {
+          const token: any = await this.signWallet(walletAddr);
+          if (token.isUser && token.isUser == "1") {
+            resolve({ token: token.payload, message: "already" });
           } else {
-            reject({ message: token.err });
+            reject({ token: token.err });
           }
         } else {
-          reject({ message: user.message });
+          const user = await this.create(
+            walletAddr,
+            name,
+            surname,
+            date,
+            gender,
+            biography
+          );
+          if (user.message === "success created") {
+            const token = security.jwt.payload.signPayload({ walletAddr });
+            if (token.payload) {
+              resolve({ token: token.payload, message: "1" });
+            } else {
+              reject({ message: token.err });
+            }
+          } else {
+            reject({ message: user.message });
+          }
         }
       } catch (err) {
         reject({ message: err });
