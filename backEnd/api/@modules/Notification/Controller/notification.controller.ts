@@ -14,7 +14,7 @@ export class NotificationController {
   };
   getNotification: Handler = async (req, res) => {
     const token = req.headers["x-access-token"] as string;
-    const { id } = req.body;
+    const { id } = req.params;
     res.json({
       notification: (await this.notificationService.find(id, token))
         .notification,
