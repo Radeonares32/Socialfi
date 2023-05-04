@@ -1,8 +1,8 @@
 import { INotification } from "../Entity/INotification";
 
 export interface NotificationRepository {
-  findAll(): Promise<INotification[]>;
-  find(id: string): Promise<INotification>;
+  findAll(walletAddr:string): Promise<INotification[]>;
+  find(id: string,walletAddr:string): Promise<INotification>;
   create(
     id: string,
     title: string,
