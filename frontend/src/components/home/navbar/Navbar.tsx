@@ -1,5 +1,28 @@
+import { useState } from "react";
+import { SigningCosmosClient } from "@cosmjs/launchpad";
+
 /* eslint-disable jsx-a11y/anchor-is-valid */
 export const Navbar = () => {
+  const [account, setAccount] = useState<string | null>(null);
+  const keplrClick = async () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+
+    if (window.keplr && window.getOfflineSigner) {
+      const chainId = "cosmoshub-4";
+      await window.keplr.enable(chainId);
+      const offlineSigner = window.keplr.getOfflineSigner(chainId);
+      const accounts = await offlineSigner.getAccounts();
+      setAccount(accounts[0].address);
+      const cosmJS = new SigningCosmosClient(
+        "https://lcd-cosmoshub.keplr.app",
+        accounts[0].address,
+        offlineSigner
+      );
+    } else {
+      alert("Keplr is not installed!");
+    }
+  };
+
   return (
     <div className="nav-header bg-white shadow-xs border-0">
       <div className="nav-top">
@@ -20,7 +43,6 @@ export const Navbar = () => {
         </a>
         <button className="nav-menu me-0 ms-2"></button>
       </div>
-
       <form action="#" className="float-left header-search">
         <div className="form-group mb-0 icon-input">
           <i className="feather-search font-sm text-grey-400"></i>
@@ -314,14 +336,22 @@ export const Navbar = () => {
           </div>
         </div>
       </div>
-
-      <a href="default-settings.html" className="p-0 ms-3 menu-icon">
-        <img
-          src="https://via.placeholder.com/50x50.png"
-          alt="user"
-          className="w40 mt--1"
-        />
-      </a>
+      {account ? (
+        <a href="default-settings.html" className="p-0 ms-3 menu-icon">
+          <img
+            src="https://via.placeholder.com/50x50.png"
+            alt="user"
+            className="w40 mt--1"
+          />
+        </a>
+      ) : (
+        <button
+          onClick={keplrClick}
+          className="p-1 lh-20 w100 bg-primary-gradiant text-white text-center font-xssss fw-600 ls-1 rounded-xl"
+        >
+          Connect Wallet
+        </button>
+      )}
     </div>
   );
 };
