@@ -1,10 +1,14 @@
-import { useState } from "react";
 import { SigningCosmosClient } from "@cosmjs/launchpad";
+import { useSignIn, useSignOut, useAuthUser,useIsAuthenticated } from "react-auth-kit";
+import axios from "axios";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 export const Navbar = () => {
+  const signIn = useSignIn();
+  const signOut = useSignOut();
+  const user: any = useAuthUser();
+  const isAuth = useIsAuthenticated()
   const chainId = "cosmoshub-4";
-  const [account, setAccount] = useState<string | null>(null);
   const keplrClick = async () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
 
@@ -12,20 +16,37 @@ export const Navbar = () => {
       await window.keplr.enable(chainId);
       const offlineSigner = window.keplr.getOfflineSigner(chainId);
       const accounts = await offlineSigner.getAccounts();
-      setAccount(accounts[0].address);
       const cosmJS = new SigningCosmosClient(
         "https://lcd-cosmoshub.keplr.app",
         accounts[0].address,
         offlineSigner
       );
+      const token = await axios.post("http://localhost:3000/user/signWallet", {
+        walletAddr: accounts[0].address,
+      });
+
+      // eslint-disable-next-line eqeqeq
+      if (token.data?.user.isUser == 1) {
+        signIn({
+          token: token.data?.user.token as string,
+          expiresIn: 3600,
+          authState: {
+            id: accounts[0].address,
+          },
+          tokenType: "Bearer",
+        });
+      }
+      // eslint-disable-next-line eqeqeq
+      else if (token.data?.user.isUser == 0) {
+      }
     } else {
       alert("Keplr is not installed!");
     }
   };
   const keplrDisClick = () => {
     if (window.keplr) {
-      window.keplr.disable(chainId)
-      setAccount(null);
+      window.keplr.disable(chainId);
+      signOut();
     }
   };
 
@@ -342,7 +363,7 @@ export const Navbar = () => {
           </div>
         </div>
       </div>
-      {account ? (
+      {isAuth() ? (
         <>
           <a
             onClick={keplrDisClick}
@@ -351,12 +372,11 @@ export const Navbar = () => {
             <i className="feather-log-out font-xl text-current"></i>
           </a>
           
-            <img
-              src="https://via.placeholder.com/50x50.png"
-              alt="user"
-              className="w40 mt--1"
-            />
-          
+          <img
+            src="https://via.placeholder.com/50x50.png"
+            alt="user"
+            className="w40 mt--1"
+          />
         </>
       ) : (
         <button
