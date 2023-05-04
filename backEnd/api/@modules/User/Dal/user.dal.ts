@@ -2,6 +2,8 @@ import { IUser } from "../Entity/IUser";
 import { UserRepository } from "../Repository/user.repository";
 import { neo4j } from "../../../../core/dataSource/neo4j/neo4j";
 
+// Security
+import { security } from "../../../security/security";
 export class UserDal implements UserRepository {
   findAll(): Promise<IUser[]> {
     return new Promise(async (resolve, reject) => {
@@ -92,6 +94,27 @@ export class UserDal implements UserRepository {
         resolve({ message: "success deleted" });
       } catch (err) {
         reject({ message: err });
+      }
+    });
+  }
+  signWallet(
+    walletAddr: string
+  ): Promise<{ token: string } | { isUser: string }> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user: any = await this.find(walletAddr);
+        if (user.length > 0) {
+          const token = security.jwt.payload.signPayload({ walletAddr });
+          if (token.payload) {
+            resolve({ token: token.payload, isUser: "1" });
+          } else {
+            reject({ token: token.err });
+          }
+        } else {
+          resolve({ isUser: "0", token: "0" });
+        }
+      } catch (err) {
+        reject({ token: err });
       }
     });
   }

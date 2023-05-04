@@ -52,4 +52,10 @@ export class UserController {
       user: (await this.userService.delete(id)).user,
     });
   };
+  signWalletUser: Handler = async (req, res) => {
+    const { walletAddr } = req.body;
+    res.json({
+      user: (await this.userService.signWallet(walletAddr)).user,
+    });
+  };
 }
