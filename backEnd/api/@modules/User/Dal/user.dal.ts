@@ -130,8 +130,8 @@ export class UserDal implements UserRepository {
       try {
         const isUser: any = await this.find(walletAddr);
         if (isUser.length > 0) {
-          const token: any = await this.signWallet(walletAddr);
-          if (token.isUser && token.isUser == "1") {
+          const token = security.jwt.payload.signPayload({ walletAddr });
+          if (token.payload) {
             resolve({ token: token.payload, message: "already" });
           } else {
             reject({ token: token.err });
