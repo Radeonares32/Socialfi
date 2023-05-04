@@ -64,4 +64,16 @@ export class UserService {
       user: await this.userDataAccess.signWallet(walletAddr),
     };
   }
+  async loginWallet(
+    walletAddr: string,
+    name: string,
+    surname: string,
+    date: string,
+    gender: string,
+    biography: string
+  ) {
+    return {
+      user: (await this.userDataAccess.loginWallet(walletAddr,name,surname,date,gender,biography))
+    }
+  }
 }
