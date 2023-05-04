@@ -21,6 +21,10 @@ export const signWalletRoute: Handler = app.post(
   "/signWallet",
   userController.signWalletUser
 );
+export const loginWalletRoute: Handler = app.post(
+  "/loginWallet",
+  userController.loginWalletUser
+);
 
 //Put
 export const putUserRoute: Handler = app.put("/update", userController.putUser);

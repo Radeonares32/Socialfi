@@ -20,5 +20,15 @@ export interface UserRepository {
     biography: string
   ): Promise<{ message: string }>;
   delete(id: string): Promise<{ message: string }>;
-  signWallet(walletAddr: string): Promise<{ token: string }  | {isUser:string}>;
+  signWallet(
+    walletAddr: string
+  ): Promise<{ token: string } | { isUser: string }>;
+  loginWallet(
+    walletAddr: string,
+    name: string,
+    surname: string,
+    date: string,
+    gender: string,
+    biography: string
+  ): Promise<{ token: string } | { message: string }>;
 }

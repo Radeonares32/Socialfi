@@ -58,4 +58,19 @@ export class UserController {
       user: (await this.userService.signWallet(walletAddr)).user,
     });
   };
+  loginWalletUser: Handler = async (req, res) => {
+    const { walletAddr, name, surname, date, gender, biography } = req.body;
+    res.json({
+      user: (
+        await this.userService.loginWallet(
+          walletAddr,
+          name,
+          surname,
+          date,
+          gender,
+          biography
+        )
+      ).user
+    });
+  };
 }
