@@ -1,37 +1,37 @@
 import { useRef } from "react";
-import axios from 'axios'
+import axios from "axios";
 import { SigningCosmosClient } from "@cosmjs/launchpad";
-import { useNavigate } from 'react-router-dom'
-import { useSignIn } from 'react-auth-kit'
+import { useNavigate } from "react-router-dom";
+import { useSignIn } from "react-auth-kit";
 
 export const Register = () => {
-  const signIn = useSignIn()  
-  const navigate = useNavigate()
-  const name:any = useRef(null);
-  const surname:any = useRef(null);
-  const date:any = useRef(null);
-  const gender:any = useRef(null);
-  const biography:any = useRef(null);
+  const signIn = useSignIn();
+  const navigate = useNavigate();
+  const name: any = useRef(null);
+  const surname: any = useRef(null);
+  const date: any = useRef(null);
+  const gender: any = useRef(null);
+  const biography: any = useRef(null);
   const chainId = "cosmoshub-4";
-  const submitData = async (e:any) => {
-    e.preventDefault()
-    if(name.current.value === "") {
-        alert("no input can be left blank")   
+  const submitData = async (e: any) => {
+    e.preventDefault();
+    if (name.current.value === "") {
+      alert("no input can be left blank");
     }
-    if(surname.current.value === "") {
-        alert("no input can be left blank")   
+    if (surname.current.value === "") {
+      alert("no input can be left blank");
     }
-    if(date.current.value === "") {
-        alert("no input can be left blank")   
+    if (date.current.value === "") {
+      alert("no input can be left blank");
     }
-    if(gender.current.value === "") {
-        alert("no input can be left blank")   
+    if (gender.current.value === "") {
+      alert("no input can be left blank");
     }
-    if(biography.current.value === "") {
-        alert("no input can be left blank")   
+    if (biography.current.value === "") {
+      alert("no input can be left blank");
     }
-    if (window.keplr && window.getOfflineSigner) { 
-        await window.keplr.enable(chainId);
+    if (window.keplr && window.getOfflineSigner) {
+      await window.keplr.enable(chainId);
       const offlineSigner = window.keplr.getOfflineSigner(chainId);
       const accounts = await offlineSigner.getAccounts();
       const cosmJS = new SigningCosmosClient(
@@ -39,41 +39,42 @@ export const Register = () => {
         accounts[0].address,
         offlineSigner
       );
-      const token:any = await axios.post("http://localhost:3000/user/loginWallet", {
-        walletAddr: accounts[0].address,
-        name:name.current.value,
-        surname:surname.current.value,
-        date:date.current.value,
-        gender:gender.current.value,
-        biography:biography.current.value
-      });
-      if(token.data.user.message === "already") {
+      const token: any = await axios.post(
+        "http://localhost:3000/user/loginWallet",
+        {
+          walletAddr: accounts[0].address,
+          name: name.current.value,
+          surname: surname.current.value,
+          date: date.current.value,
+          gender: gender.current.value,
+          biography: biography.current.value,
+        }
+      );
+      if (token.data.user.message === "already") {
         signIn({
-            token:token.data.user.token as string,
-            expiresIn:3600,
-            tokenType:"Bearer",
-            authState:{
-                id:accounts[0].address
-            }
-        })
-        navigate('/')
-      }
-      else if (token.data.user.message === "1") {
+          token: token.data.user.token as string,
+          expiresIn: 3600,
+          tokenType: "Bearer",
+          authState: {
+            id: accounts[0].address,
+          },
+        });
+        navigate("/");
+      } else if (token.data.user.message === "1") {
         signIn({
-            token:token.data.user.token as string,
-            expiresIn:3600,
-            tokenType:"Bearer",
-            authState:{
-                id:accounts[0].address
-            }
-        })
-        navigate('/')
+          token: token.data.user.token as string,
+          expiresIn: 3600,
+          tokenType: "Bearer",
+          authState: {
+            id: accounts[0].address,
+          },
+        });
+        navigate("/");
       }
+    } else {
+      alert("Keplr is not installed!");
     }
-    else {
-        alert("Keplr is not installed!");
-    }
-  }  
+  };
   return (
     <div className="vh-100 align-items-center d-flex bg-white rounded-3 overflow-hidden">
       <div className="card shadow-none border-0 ms-auto me-auto login-card">
@@ -132,7 +133,10 @@ export const Register = () => {
               ></textarea>
             </div>
             <div className="form-group icon-input mt-4">
-              <button onClick={submitData} className="p-1 lh-20 w100 bg-primary-gradiant text-black text-center font-xssss fw-600 ls-1 rounded-xl">
+              <button
+                onClick={submitData}
+                className="p-1 lh-20 w100 bg-primary-gradiant text-black text-center font-xssss fw-600 ls-1 rounded-xl"
+              >
                 Submit
               </button>
             </div>
