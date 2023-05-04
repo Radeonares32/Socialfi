@@ -6,11 +6,14 @@ import { NotificationRepository } from "../Repository/notification.repo";
 import { neo4j } from "../../../../core/dataSource/neo4j/neo4j";
 
 export class NotificationDal implements NotificationRepository {
-  findAll(walletAddr:string): Promise<INotification[]> {
+  findAll(walletAddr: string): Promise<INotification[]> {
     return new Promise(async (resolve, reject) => {
       try {
         const notifications: any = await neo4j()
-          ?.readCypher("match(n:notification) match(u:user {id:$walletAddr}) match(u)-[:notUserRel]->(n)  return n", {walletAddr})
+          ?.readCypher(
+            "match(n:notification) match(u:user {id:$walletAddr}) match(u)-[:notUserRel]->(n)  return n",
+            { walletAddr }
+          )
           .catch((err) => console.log(err));
         const rNot = notifications.records.map((uss: any) => {
           return uss.map((res: any) => {
@@ -23,11 +26,14 @@ export class NotificationDal implements NotificationRepository {
       }
     });
   }
-  find(id: string,walletAddr:string): Promise<INotification> {
+  find(id: string, walletAddr: string): Promise<INotification> {
     return new Promise(async (resolve, reject) => {
       try {
         const notification: any = await neo4j()
-          ?.readCypher("match(n:notificaiton {id:$id}) match(u:user {id:$walletAddr}) match(u)-[:notUserRel]->(n) return n", { id,walletAddr })
+          ?.readCypher(
+            "match(n:notification {id:$id}) match(u:user {id:$walletAddr}) match(u)-[:notUserRel]->(n) return n",
+            { id, walletAddr }
+          )
           .catch((err) => console.log(err));
         const rNot = notification.records.map((uss: any) => {
           return uss.map((res: any) => {
@@ -52,7 +58,7 @@ export class NotificationDal implements NotificationRepository {
           ?.writeCypher(
             "match(u:user {id:$walletAddr}) create(n:notification {id:$id,title:$title,description:$description,activityLink:$activityLink}) create(u)-[notUserRel:notUserRel]->(n)",
             {
-              id:uuid(),
+              id: uuid(),
               title,
               description,
               activityLink,
@@ -67,6 +73,17 @@ export class NotificationDal implements NotificationRepository {
     });
   }
   delete(id: string): Promise<{ message: string }> {
-    throw new Error("Method not implemented.");
+    return new Promise(async (resolve, reject) => {
+      try {
+        await neo4j()
+          ?.writeCypher("match(n:notification {id:$id}) detach delete n ", {
+            id,
+          })
+          .catch((err) => console.log(err));
+        resolve({ message: "success notification deleted" });
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
   }
 }
