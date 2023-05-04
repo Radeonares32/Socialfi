@@ -1,14 +1,14 @@
 import { SigningCosmosClient } from "@cosmjs/launchpad";
-import { useSignIn, useSignOut,useIsAuthenticated } from "react-auth-kit";
-import { useNavigate } from 'react-router-dom'
+import { useSignIn, useSignOut, useIsAuthenticated } from "react-auth-kit";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 export const Navbar = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const signIn = useSignIn();
   const signOut = useSignOut();
-  const isAuth = useIsAuthenticated()
+  const isAuth = useIsAuthenticated();
   const chainId = "cosmoshub-4";
   const keplrClick = async () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -39,7 +39,7 @@ export const Navbar = () => {
       }
       // eslint-disable-next-line eqeqeq
       else if (token.data?.user.isUser == 0) {
-        navigate('register')
+        navigate("register");
       }
     } else {
       alert("Keplr is not installed!");
@@ -373,7 +373,7 @@ export const Navbar = () => {
           >
             <i className="feather-log-out font-xl text-current"></i>
           </a>
-          
+
           <img
             src="https://via.placeholder.com/50x50.png"
             alt="user"
