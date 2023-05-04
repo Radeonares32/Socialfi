@@ -31,7 +31,13 @@ export class NotificationController {
           activityLink,
           token
         )
-      ).notification
+      ).notification,
+    });
+  };
+  deleteNotification: Handler = async (req, res) => {
+    const { id } = req.body;
+    res.json({
+      notification: (await this.notificationService.delete(id)).notification,
     });
   };
 }
