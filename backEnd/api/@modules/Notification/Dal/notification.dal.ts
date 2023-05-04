@@ -6,11 +6,11 @@ import { NotificationRepository } from "../Repository/notification.repo";
 import { neo4j } from "../../../../core/dataSource/neo4j/neo4j";
 
 export class INotificationDal implements NotificationRepository {
-  findAll(): Promise<INotification[]> {
+  findAll(walletAddr:string): Promise<INotification[]> {
     return new Promise(async (resolve, reject) => {
       try {
         const notifications: any = await neo4j()
-          ?.readCypher("match(n:notification) return n", {})
+          ?.readCypher("match(n:notification) match(u:user {id:$walletAddr}) match(u)-[:notUserRel]->(n)  return n", {walletAddr})
           .catch((err) => console.log(err));
         const rNot = notifications.records.map((uss: any) => {
           return uss.map((res: any) => {
@@ -23,11 +23,11 @@ export class INotificationDal implements NotificationRepository {
       }
     });
   }
-  find(id: string): Promise<INotification> {
+  find(id: string,walletAddr:string): Promise<INotification> {
     return new Promise(async (resolve, reject) => {
       try {
         const notification: any = await neo4j()
-          ?.readCypher("match(n:notificaiton {id:$id}) return n", { id })
+          ?.readCypher("match(n:notificaiton {id:$id}) match(u:user {id:$walletAddr}) match(u)-[:notUserRel]->(n) return n", { id,walletAddr })
           .catch((err) => console.log(err));
         const rNot = notification.records.map((uss: any) => {
           return uss.map((res: any) => {
