@@ -5,7 +5,7 @@ import { NotificationRepository } from "../Repository/notification.repo";
 
 import { neo4j } from "../../../../core/dataSource/neo4j/neo4j";
 
-export class INotificationDal implements NotificationRepository {
+export class NotificationDal implements NotificationRepository {
   findAll(walletAddr:string): Promise<INotification[]> {
     return new Promise(async (resolve, reject) => {
       try {
@@ -41,7 +41,6 @@ export class INotificationDal implements NotificationRepository {
     });
   }
   create(
-    id: string,
     title: string,
     description: string,
     activityLink: string,
@@ -53,7 +52,7 @@ export class INotificationDal implements NotificationRepository {
           ?.writeCypher(
             "match(u:user {id:$walletAddr}) create(n:notification {id:$id,title:$title,description:$description,activityLink:$activityLink}) create(u)-[notUserRel:notUserRel]->(n)",
             {
-              id,
+              id:uuid(),
               title,
               description,
               activityLink,
