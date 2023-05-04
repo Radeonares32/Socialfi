@@ -3,12 +3,12 @@ import { SigningCosmosClient } from "@cosmjs/launchpad";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 export const Navbar = () => {
+  const chainId = "cosmoshub-4";
   const [account, setAccount] = useState<string | null>(null);
   const keplrClick = async () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
 
     if (window.keplr && window.getOfflineSigner) {
-      const chainId = "cosmoshub-4";
       await window.keplr.enable(chainId);
       const offlineSigner = window.keplr.getOfflineSigner(chainId);
       const accounts = await offlineSigner.getAccounts();
@@ -20,6 +20,12 @@ export const Navbar = () => {
       );
     } else {
       alert("Keplr is not installed!");
+    }
+  };
+  const keplrDisClick = () => {
+    if (window.keplr) {
+      window.keplr.disable(chainId)
+      setAccount(null);
     }
   };
 
@@ -337,17 +343,25 @@ export const Navbar = () => {
         </div>
       </div>
       {account ? (
-        <a href="default-settings.html" className="p-0 ms-3 menu-icon">
-          <img
-            src="https://via.placeholder.com/50x50.png"
-            alt="user"
-            className="w40 mt--1"
-          />
-        </a>
+        <>
+          <a
+            onClick={keplrDisClick}
+            className="p-2 text-center ms-3 menu-icon chat-active-btn"
+          >
+            <i className="feather-log-out font-xl text-current"></i>
+          </a>
+          
+            <img
+              src="https://via.placeholder.com/50x50.png"
+              alt="user"
+              className="w40 mt--1"
+            />
+          
+        </>
       ) : (
         <button
           onClick={keplrClick}
-          className="p-1 lh-20 w100 bg-primary-gradiant text-white text-center font-xssss fw-600 ls-1 rounded-xl"
+          className="p-1 lh-20 w100 bg-primary-gradiant text-black text-center font-xssss fw-600 ls-1 rounded-xl"
         >
           Connect Wallet
         </button>
