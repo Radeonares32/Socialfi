@@ -13,8 +13,9 @@ export class NotificaitonService {
     };
   }
   async find(id: string, walletAddr: string) {
+    const verifyWalletAddr = security.jwt.token.verifyToken(walletAddr); 
     return {
-      notification: await this.notificationDataAccess.find(id, walletAddr),
+      notification: await this.notificationDataAccess.find(id, verifyWalletAddr.token?.payload?.walletAddr as string),
     };
   }
   async create(
@@ -23,13 +24,14 @@ export class NotificaitonService {
     activityLink: string,
     walletAddr: string
   ) {
+    const verifyWalletAddr = security.jwt.token.verifyToken(walletAddr); 
     return {
       notification: (
         await this.notificationDataAccess.create(
           title,
           description,
           activityLink,
-          walletAddr
+          verifyWalletAddr.token?.payload?.walletAddr as string
         )
       ).message,
     };
