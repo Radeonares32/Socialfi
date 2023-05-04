@@ -6,9 +6,10 @@ export class NotificaitonService {
   private notificationDataAccess: NotificationDal = new NotificationDal();
   async findAll(walletAddr: string) {
     const verifyWalletAddr = security.jwt.token.verifyToken(walletAddr);
-    console.log(verifyWalletAddr);
     return {
-      notification: await this.notificationDataAccess.findAll(walletAddr),
+      notification: await this.notificationDataAccess.findAll(
+        verifyWalletAddr.token?.payload?.walletAddr as string
+      ),
     };
   }
   async find(id: string, walletAddr: string) {
