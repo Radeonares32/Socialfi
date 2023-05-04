@@ -26,3 +26,10 @@ export const postNotification: Handler = app.post(
   Middlewares.userAuth,
   notificaitonController.postNotification
 );
+
+//Delete
+export const deleteNotification: Handler = app.delete(
+  "/delete",
+  Middlewares.userAuth,
+  notificaitonController.deleteNotification
+);
