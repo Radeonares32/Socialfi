@@ -7,6 +7,7 @@ import {
   getUsersRoute,
   postUserRoute,
   putUserRoute,
+  signWalletRoute
 } from "./user.route";
 
 export const userRoutes = app.use(
@@ -15,5 +16,6 @@ export const userRoutes = app.use(
   getUserRoute,
   getUsersRoute,
   postUserRoute,
-  putUserRoute
+  putUserRoute,
+  signWalletRoute
 );
