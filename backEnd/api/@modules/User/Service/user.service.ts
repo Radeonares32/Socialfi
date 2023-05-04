@@ -9,7 +9,7 @@ export class UserService {
   }
   async find(id: string) {
     return {
-      user: await (this.userDataAccess.find(id)),
+      user: await this.userDataAccess.find(id),
     };
   }
   async update(
@@ -57,6 +57,11 @@ export class UserService {
   async delete(id: string) {
     return {
       user: (await this.userDataAccess.delete(id)).message,
+    };
+  }
+  async signWallet(walletAddr: string) {
+    return {
+      user: await this.userDataAccess.signWallet(walletAddr),
     };
   }
 }
