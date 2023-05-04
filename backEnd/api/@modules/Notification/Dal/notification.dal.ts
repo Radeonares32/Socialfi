@@ -1,3 +1,5 @@
+import { v4 as uuid } from "uuid";
+
 import { INotification } from "../Entity/INotification";
 import { NotificationRepository } from "../Repository/notification.repo";
 
@@ -45,7 +47,25 @@ export class INotificationDal implements NotificationRepository {
     activityLink: string,
     walletAddr: string
   ): Promise<{ message: string }> {
-    throw new Error("Method not implemented.");
+    return new Promise(async (resolve, reject) => {
+      try {
+        await neo4j()
+          ?.writeCypher(
+            "match(u:user {id:$walletAddr}) create(n:notification {id:$id,title:$title,description:$description,activityLink:$activityLink}) create(u)-[notUserRel:notUserRel]->(n)",
+            {
+              id,
+              title,
+              description,
+              activityLink,
+              walletAddr,
+            }
+          )
+          .catch((err) => console.log(err));
+        resolve({ message: "success notification created" });
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
   }
   delete(id: string): Promise<{ message: string }> {
     throw new Error("Method not implemented.");
