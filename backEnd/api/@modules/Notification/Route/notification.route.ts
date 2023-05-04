@@ -1,14 +1,28 @@
-import express,{Handler} from 'express'
+import express, { Handler } from "express";
 
-import {NotificationController } from '../Controller/notification.controller'
+import { NotificationController } from "../Controller/notification.controller";
 
-import { Middlewares } from '../../../middleware/middleware'
+import { Middlewares } from "../../../middleware/middleware";
 
-const app = express.Router()
+const app = express.Router();
 
-const notificaitonController:NotificationController = new NotificationController()
-
+const notificaitonController: NotificationController = new NotificationController();
 
 //Get
-export const getNotifications:Handler = app.get('/',Middlewares.userAuth,notificaitonController.getNotifications)
-export const getNotification:Handler = app.get('/:id',Middlewares.userAuth,notificaitonController.getNotification)
+export const getNotifications: Handler = app.get(
+  "/",
+  Middlewares.userAuth,
+  notificaitonController.getNotifications
+);
+export const getNotification: Handler = app.get(
+  "/:id",
+  Middlewares.userAuth,
+  notificaitonController.getNotification
+);
+
+//Post
+export const postNotification: Handler = app.post(
+  "/create",
+  Middlewares.userAuth,
+  notificaitonController.postNotification
+);
