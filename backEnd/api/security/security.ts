@@ -1,5 +1,5 @@
-import { jwt } from './jwt/jwt'
+import { jwt } from "./jwt/jwt";
 
 export const security = {
-    jwt
-}
+  jwt,
+};
