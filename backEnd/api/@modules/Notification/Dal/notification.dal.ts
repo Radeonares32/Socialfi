@@ -22,7 +22,21 @@ export class INotificationDal implements NotificationRepository {
     });
   }
   find(id: string): Promise<INotification> {
-    throw new Error("Method not implemented.");
+    return new Promise(async (resolve, reject) => {
+      try {
+        const notification: any = await neo4j()
+          ?.readCypher("match(n:notificaiton {id:$id}) return n", { id })
+          .catch((err) => console.log(err));
+        const rNot = notification.records.map((uss: any) => {
+          return uss.map((res: any) => {
+            return res.properties;
+          });
+        });
+        resolve(rNot as INotification);
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
   }
   create(
     id: string,
