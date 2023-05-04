@@ -1,12 +1,13 @@
 import { SigningCosmosClient } from "@cosmjs/launchpad";
-import { useSignIn, useSignOut, useAuthUser,useIsAuthenticated } from "react-auth-kit";
+import { useSignIn, useSignOut,useIsAuthenticated } from "react-auth-kit";
+import { useNavigate } from 'react-router-dom'
 import axios from "axios";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 export const Navbar = () => {
+  const navigate = useNavigate()
   const signIn = useSignIn();
   const signOut = useSignOut();
-  const user: any = useAuthUser();
   const isAuth = useIsAuthenticated()
   const chainId = "cosmoshub-4";
   const keplrClick = async () => {
@@ -38,6 +39,7 @@ export const Navbar = () => {
       }
       // eslint-disable-next-line eqeqeq
       else if (token.data?.user.isUser == 0) {
+        navigate('register')
       }
     } else {
       alert("Keplr is not installed!");
