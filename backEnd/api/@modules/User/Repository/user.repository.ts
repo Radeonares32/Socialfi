@@ -24,6 +24,11 @@ export interface UserRepository {
     walletAddr: string
   ): Promise<{ token: string } | { isUser: string }>;
   loginWallet(
-    walletAddr: string
+    walletAddr: string,
+    name: string,
+    surname: string,
+    date: string,
+    gender: string,
+    biography: string
   ): Promise<{ token: string } | { message: string }>;
 }
