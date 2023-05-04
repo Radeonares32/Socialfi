@@ -31,7 +31,7 @@ export class NotificaitonService {
   }
   async delete(id: string) {
     return {
-      notification: await this.notificationDataAccess.delete,
+      notification: this.notificationDataAccess.delete,
     };
   }
 }
