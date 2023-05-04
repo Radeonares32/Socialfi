@@ -20,4 +20,18 @@ export class NotificationController {
         .notification,
     });
   };
+  postNotification: Handler = async (req, res) => {
+    const token = req.headers["x-access-token"] as string;
+    const { title, description, activityLink } = req.body;
+    res.json({
+      notification: (
+        await this.notificationService.create(
+          title,
+          description,
+          activityLink,
+          token
+        )
+      ).notification
+    });
+  };
 }
