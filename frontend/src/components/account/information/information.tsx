@@ -1,11 +1,13 @@
 import { Leftbar } from "../../home/leftbar/Leftbar";
 import { Navbar } from "../../home/navbar/Navbar";
 
+
 export const Information = () => {
   return (
     <>
       <Navbar />
       <Leftbar />
+      
       <div className="main-content bg-lightblue theme-dark-bg right-chat-active">
         <div className="middle-sidebar-bottom">
           <div className="middle-sidebar-left">

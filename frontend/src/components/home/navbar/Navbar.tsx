@@ -1,6 +1,6 @@
 import { SigningCosmosClient } from "@cosmjs/launchpad";
 import { useSignIn, useSignOut, useIsAuthenticated } from "react-auth-kit";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -49,6 +49,7 @@ export const Navbar = () => {
     if (window.keplr) {
       window.keplr.disable(chainId);
       signOut();
+      navigate('/')
     }
   };
 
@@ -369,16 +370,17 @@ export const Navbar = () => {
         <>
           <a
             onClick={keplrDisClick}
-            className="p-2 text-center ms-3 menu-icon chat-active-btn"
+            className="p-2 text-center ms-3 menu-icon "
           >
             <i className="feather-log-out font-xl text-current"></i>
           </a>
-
-          <img
-            src="https://via.placeholder.com/50x50.png"
-            alt="user"
-            className="w40 mt--1"
-          />
+          <Link to="/information">
+            <img
+              src="https://via.placeholder.com/50x50.png"
+              alt="user"
+              className="w40 mt--1"
+            />
+          </Link>
         </>
       ) : (
         <button
