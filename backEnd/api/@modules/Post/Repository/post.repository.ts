@@ -6,7 +6,6 @@ export interface PostRepository {
   find(id: string): Promise<IPost>;
   findUser(id: string, walletAddr: string): Promise<IPost>;
   create(
-    id: string,
     walletAddr: string,
     title: string,
     description: string,
@@ -14,7 +13,6 @@ export interface PostRepository {
     image?: string
   ): Promise<{ message: string }>;
   update(
-    id: string,
     walletAddr: string,
     title: string,
     description: string,
