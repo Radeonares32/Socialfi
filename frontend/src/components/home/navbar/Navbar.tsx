@@ -33,6 +33,7 @@ export const Navbar = () => {
           expiresIn: 3600,
           authState: {
             id: accounts[0].address,
+            token:token.data.user.token as string
           },
           tokenType: "Bearer",
         });
