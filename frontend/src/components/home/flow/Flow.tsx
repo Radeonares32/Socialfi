@@ -1,4 +1,18 @@
+import React, {useRef} from 'react'
+
 export const Flow = () => {
+  const fileRef = useRef<HTMLInputElement>(null)
+  const fileClick = () => {
+    if(fileRef.current) {
+     
+      fileRef.current.click()
+    }
+  
+  }
+  const handleFileChange  = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files
+    console.log(file)
+  }
   return (
     <div className="main-content right-chat-active">
       <div className="middle-sidebar-bottom">
@@ -228,11 +242,11 @@ export const Flow = () => {
                   </div>
                 </div>
               </div>
-
+                    {/* create post */}
               <div className="card w-100 shadow-xss rounded-xxl border-0 ps-4 pt-4 pe-4 pb-3 mb-3">
                 <div className="card-body p-0">
-                  <a
-                    href="#"
+                  <a 
+                    href="#" 
                     className=" font-xssss fw-600 text-grey-500 card-body p-0 d-flex align-items-center"
                   >
                     <i className="btn-round-sm font-xs text-primary feather-edit-3 me-2 bg-greylight"></i>
@@ -264,11 +278,11 @@ export const Flow = () => {
                     <span className="d-none-xs">Live Video</span>
                   </a>
                   <a
-                    href="#"
+                    onClick={fileClick}
                     className="d-flex align-items-center font-xssss fw-600 ls-1 text-grey-700 text-dark pe-4"
                   >
                     <i className="font-md text-success feather-image me-2"></i>
-                    <span className="d-none-xs">Photo/Video</span>
+                    <span className="d-none-xs ">Photo/Video</span><input type="file" ref={fileRef} onChange={handleFileChange} className="form-control w-25 h-25 " style={{display:"none"}} />
                   </a>
                   <a
                     href="#"
@@ -330,7 +344,7 @@ export const Flow = () => {
                 </div>
               </div>
 
-              <div className="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3">
+            {/*   <div className="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3">
                 <div className="card-body p-0 d-flex">
                   <figure className="avatar me-3">
                     <img
@@ -582,8 +596,8 @@ export const Flow = () => {
                     />
                   </div>
                 </div>
-              </div>
-
+              </div> */}
+              {/* no image post */}
               <div className="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-0">
                 <div className="card-body p-0 d-flex">
                   <figure className="avatar me-3 m-0">
@@ -1021,7 +1035,7 @@ export const Flow = () => {
                   </div>
                 </div>
               </div>
-
+                {/* image post */}
               <div className="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3">
                 <div className="card-body p-0 d-flex">
                   <figure className="avatar me-3">
@@ -1157,7 +1171,7 @@ export const Flow = () => {
                   </a>
                 </div>
               </div>
-
+{/* 
               <div className="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-0">
                 <div className="card-body p-0 d-flex">
                   <figure className="avatar me-3">
@@ -1310,7 +1324,7 @@ export const Flow = () => {
                     <span className="d-none-xs">Share</span>
                   </a>
                 </div>
-              </div>
+              </div> */}
 
               <div className="card w-100 shadow-none bg-transparent bg-transparent-card border-0 p-0 mb-0">
                 <div className="owl-carousel category-card owl-theme overflow-hidden nav-none">
@@ -1447,7 +1461,7 @@ export const Flow = () => {
                 </div>
               </div>
 
-              <div className="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3">
+             {/*  <div className="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3">
                 <div className="card-body p-0 d-flex">
                   <figure className="avatar me-3">
                     <img
@@ -1534,9 +1548,9 @@ export const Flow = () => {
                     <span className="d-none-xs">Share</span>
                   </a>
                 </div>
-              </div>
+              </div> */}
 
-              <div className="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-0">
+              {/* <div className="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-0">
                 <div className="card-body p-0 d-flex">
                   <figure className="avatar me-3">
                     <img
@@ -1634,7 +1648,7 @@ export const Flow = () => {
                     <span className="d-none-xs">Share</span>
                   </a>
                 </div>
-              </div>
+              </div> */}
 
               <div className="card w-100 text-center shadow-xss rounded-xxl border-0 p-4 mb-3 mt-3">
                 <div
