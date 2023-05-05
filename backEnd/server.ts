@@ -15,9 +15,10 @@ app.use(
 );
 
 import { userRoutes } from "./api/@modules/User/Route/routes";
-import { notificaitonRoutes } from './api/@modules/Notification/Route/routes'
+import { notificaitonRoutes } from "./api/@modules/Notification/Route/routes";
+import { postRoutes } from "./api/@modules/Post/Route/routes";
 
-app.use("/", userRoutes,notificaitonRoutes);
+app.use("/", userRoutes, notificaitonRoutes, postRoutes);
 
 server.listen(3000, () => {
   console.log("server running");
