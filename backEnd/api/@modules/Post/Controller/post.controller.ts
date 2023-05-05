@@ -1,4 +1,5 @@
 import { Handler } from "express";
+import { format } from "date-and-time";
 
 import { PostService } from "../Service/post.service";
 
@@ -27,5 +28,34 @@ export class PostController {
     res.json({
       post: (await this.postService.findUser(id, token)).post,
     });
+  };
+  postPostCreate: Handler = async (req, res) => {
+    const token = req.headers["x-access-token"] as string;
+    const { image } = req.files as any;
+    const { title, description, date } = req.body;
+    if (image) {
+      res.json({
+        post: (
+          await this.postService.create(
+            token,
+            title,
+            description,
+            format(new Date(), "YYYY/MM/DD HH:mm:ss"),
+            image[0]
+          )
+        ).post,
+      });
+    } else {
+      res.json({
+        post: (
+          await this.postService.create(
+            token,
+            title,
+            description,
+            format(new Date(), "YYYY/MM/DD HH:mm:ss")
+          )
+        ).post,
+      });
+    }
   };
 }
