@@ -13,6 +13,7 @@ export interface PostRepository {
     image?: string
   ): Promise<{ message: string }>;
   update(
+    id:string,
     walletAddr: string,
     title: string,
     description: string,
