@@ -32,7 +32,7 @@ export class PostController {
   postPostCreate: Handler = async (req, res) => {
     const token = req.headers["x-access-token"] as string;
     const { image } = req.files as any;
-    const { title, description, date } = req.body;
+    const { title, description } = req.body;
     if (image) {
       res.json({
         post: (
@@ -49,6 +49,37 @@ export class PostController {
       res.json({
         post: (
           await this.postService.create(
+            token,
+            title,
+            description,
+            format(new Date(), "YYYY/MM/DD HH:mm:ss")
+          )
+        ).post,
+      });
+    }
+  };
+  putPostUpdate: Handler = async (req, res) => {
+    const token = req.headers["x-access-token"] as string;
+    const { image } = req.files as any;
+    const { id, title, description } = req.body;
+    if (image) {
+      res.json({
+        post: (
+          await this.postService.update(
+            id,
+            token,
+            title,
+            description,
+            format(new Date(), "YYYY/MM/DD HH:mm:ss"),
+            image[0]
+          )
+        ).post,
+      });
+    } else {
+      res.json({
+        post: (
+          await this.postService.update(
+            id,
             token,
             title,
             description,
