@@ -1,3 +1,5 @@
+import { v4 as uuid } from "uuid";
+
 import { security } from "../../../security/security";
 import { neo4j } from "../../../../core/dataSource/neo4j/neo4j";
 
@@ -80,17 +82,37 @@ export class PostDal implements PostRepository {
     });
   }
   create(
-    id: string,
     walletAddr: string,
     title: string,
     description: string,
     date: string,
     image?: string | undefined
   ): Promise<{ message: string }> {
-    throw new Error("Method not implemented.");
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (image) {
+          await neo4j()
+            ?.writeCypher(
+              "match(u:user {id:$walletAddr}) create(p:post{id:$id,title:$title,description:$description,date:$date,image:$image}) create(u)-[:userPostRel]->(p)",
+              { id: uuid(), walletAddr, title, description, date, image }
+            )
+            .catch((err) => console.log(err));
+          resolve({ message: "success created post" });
+        } else {
+          await neo4j()
+            ?.writeCypher(
+              "match(u:user {id:$walletAddr}) create(p:post{id:$id,title:$title,description:$description,date:$date}) create(u)-[:userPostRel]->(p)",
+              { id: uuid(), walletAddr, title, description, date }
+            )
+            .catch((err) => console.log(err));
+          resolve({ message: "success created post" });
+        }
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
   }
   update(
-    id: string,
     walletAddr: string,
     title: string,
     description: string,
