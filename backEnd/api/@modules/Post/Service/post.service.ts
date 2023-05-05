@@ -17,11 +17,10 @@ export class PostService {
       ),
     };
   }
-  async find(token: string) {
-    const verifyWalletAddr = security.jwt.token.verifyToken(token);
+  async find(id: string) {
     return {
       post: await this.postDal.find(
-        verifyWalletAddr.token?.payload?.walletAddr as string
+        id
       ),
     };
   }

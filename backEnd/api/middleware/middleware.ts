@@ -1,5 +1,9 @@
-import { userAuth } from './auth/user.middleware'
+import { userAuth } from "./auth/user.middleware";
+import { postUploads } from "./multer/multer.middleware";
 
 export const Middlewares = {
-    userAuth
-}
+  userAuth,
+  multer: {
+    postUploads,
+  },
+};

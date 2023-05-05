@@ -17,14 +17,14 @@ export class PostController {
     });
   };
   getPostFind: Handler = async (req, res) => {
-    const token = req.headers["x-access-token"] as string;
+    const { id } = req.params;
     res.json({
-      post: (await this.postService.find(token)).post,
+      post: (await this.postService.find(id)).post,
     });
   };
   getPostUserFind: Handler = async (req, res) => {
     const token = req.headers["x-access-token"] as string;
-    const { id } = req.body;
+    const { id } = req.params;
     res.json({
       post: (await this.postService.findUser(id, token)).post,
     });
