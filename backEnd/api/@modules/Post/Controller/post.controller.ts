@@ -89,4 +89,11 @@ export class PostController {
       });
     }
   };
+  deletePostDelete: Handler = async (req, res) => {
+    const token = req.headers["x-access-token"] as string;
+    const { id } = req.body;
+    res.json({
+      post: (await this.postService.delete(id, token)).post,
+    });
+  };
 }
