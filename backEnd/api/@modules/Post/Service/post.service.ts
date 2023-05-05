@@ -95,4 +95,13 @@ export class PostService {
       };
     }
   }
+  async delete(id: string, token: string) {
+    const verifyWalletAddr = security.jwt.token.verifyToken(token);
+    return {
+      post: await this.postDal.delete(
+        id,
+        verifyWalletAddr.token?.payload?.walletAddr as string
+      ),
+    };
+  }
 }
