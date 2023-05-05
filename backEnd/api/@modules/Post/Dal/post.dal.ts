@@ -129,15 +129,15 @@ export class PostDal implements PostRepository {
               { id, walletAddr, title, description, date, image }
             )
             .catch((err) => console.log(err));
-          resolve({ message: "success created post" });
+          resolve({ message: "success updated post" });
         } else {
-            await neo4j()
+          await neo4j()
             ?.writeCypher(
               "match(u:user {id:$walletAddr})-[:userPostRel]->(p:post {id:$id}) set p.title=$title,p.description=$description,p.date=$date return p",
               { id, walletAddr, title, description, date }
             )
             .catch((err) => console.log(err));
-          resolve({ message: "success created post" });
+          resolve({ message: "success updated post" });
         }
       } catch (err) {
         reject({ message: err });
@@ -145,6 +145,18 @@ export class PostDal implements PostRepository {
     });
   }
   delete(id: string, walletAddr: string): Promise<{ message: string }> {
-    throw new Error("Method not implemented.");
+    return new Promise(async (resolve, reject) => {
+      try {
+        await neo4j()
+          ?.writeCypher(
+            "match(u:user {id:$walletAddr})-[:userPostRel]->(p:post {id:$id}) detach delete p",
+            { id, walletAddr }
+          )
+          .catch((err) => console.log(err));
+        resolve({ message: "success delete post" });
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
   }
 }
