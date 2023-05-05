@@ -15,4 +15,10 @@ export class PostController {
       post: (await this.postService.findAllUser(token)).post,
     });
   };
+  getPostFind:Handler = async (req,res) => {
+    const token = req.headers['x-access-token'] as string
+    res.json({
+        post:(await this.postService.find(token)).post
+    })
+  }
 }
