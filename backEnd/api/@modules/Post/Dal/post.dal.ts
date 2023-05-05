@@ -113,13 +113,36 @@ export class PostDal implements PostRepository {
     });
   }
   update(
+    id: string,
     walletAddr: string,
     title: string,
     description: string,
     date: string,
     image?: string | undefined
   ): Promise<{ message: string }> {
-    throw new Error("Method not implemented.");
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (image) {
+          await neo4j()
+            ?.writeCypher(
+              "match(u:user {id:$walletAddr})-[:userPostRel]->(p:post {id:$id}) set p.title=$title,p.description=$description,p.date=$date,p.image=$image return p",
+              { id, walletAddr, title, description, date, image }
+            )
+            .catch((err) => console.log(err));
+          resolve({ message: "success created post" });
+        } else {
+            await neo4j()
+            ?.writeCypher(
+              "match(u:user {id:$walletAddr})-[:userPostRel]->(p:post {id:$id}) set p.title=$title,p.description=$description,p.date=$date return p",
+              { id, walletAddr, title, description, date }
+            )
+            .catch((err) => console.log(err));
+          resolve({ message: "success created post" });
+        }
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
   }
   delete(id: string, walletAddr: string): Promise<{ message: string }> {
     throw new Error("Method not implemented.");
