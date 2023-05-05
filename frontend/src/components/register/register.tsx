@@ -57,6 +57,7 @@ export const Register = () => {
           tokenType: "Bearer",
           authState: {
             id: accounts[0].address,
+            token:token.data.user.token as string
           },
         });
         navigate("/");
@@ -67,6 +68,7 @@ export const Register = () => {
           tokenType: "Bearer",
           authState: {
             id: accounts[0].address,
+            token:token.data.user.token as string
           },
         });
         navigate("/");
