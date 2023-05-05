@@ -63,4 +63,36 @@ export class PostService {
       };
     }
   }
+  async update(
+    id: string,
+    token: string,
+    title: string,
+    description: string,
+    date: string,
+    image?: string
+  ) {
+    const verifyWalletAddr = security.jwt.token.verifyToken(token);
+    if (image) {
+      return {
+        post: await this.postDal.update(
+          id,
+          verifyWalletAddr.token?.payload?.walletAddr as string,
+          title,
+          description,
+          date,
+          image
+        ),
+      };
+    } else {
+      return {
+        post: await this.postDal.update(
+          id,
+          verifyWalletAddr.token?.payload?.walletAddr as string,
+          title,
+          description,
+          date
+        ),
+      };
+    }
+  }
 }
