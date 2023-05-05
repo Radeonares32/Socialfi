@@ -43,7 +43,21 @@ export class PostDal implements PostRepository {
     });
   }
   find(id: string): Promise<IPost> {
-    throw new Error("Method not implemented.");
+    return new Promise(async (resolve, reject) => {
+      try {
+        const post: any = await neo4j()
+          ?.readCypher("match(p:post {id:$id})", { id })
+          .catch((err) => console.log(err));
+        const rPost = post.records.map((uss: any) => {
+          return uss.map((res: any) => {
+            return res.properties;
+          });
+        });
+        resolve(rPost as IPost);
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
   }
   findUser(id: string, walletAddr: string): Promise<IPost> {
     throw new Error("Method not implemented.");
