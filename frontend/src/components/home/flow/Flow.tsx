@@ -61,7 +61,7 @@ export const Flow = () => {
     axios.get("http://localhost:3000/post/").then((posts: any) => {
       setPosts(posts.data.post);
     });
-  }, []);
+  }, [postClick]);
   return (
     <div className="main-content right-chat-active">
       <div className="middle-sidebar-bottom">
