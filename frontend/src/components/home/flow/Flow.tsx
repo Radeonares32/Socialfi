@@ -1,17 +1,60 @@
-import React, { useRef } from "react";
-import { useIsAuthenticated } from "react-auth-kit";
+import { useRef, useState } from "react";
+import { useIsAuthenticated, useAuthUser } from "react-auth-kit";
+import axios from "axios";
 
 export const Flow = () => {
   const isAuth = useIsAuthenticated();
+  const auth: any = useAuthUser();
   const fileRef = useRef<HTMLInputElement>(null);
+  const [image, setImage] = useState<any>();
+  const [description, setDescription] = useState<any>();
   const fileClick = () => {
     if (fileRef.current) {
       fileRef.current.click();
     }
   };
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files;
-    console.log(file);
+  const handleFileChange = (e: any) => {
+    const file = e.target.files[0];
+    alert("File uploaded");
+    setImage(file);
+  };
+  const postClick = async () => {
+    const formData = new FormData();
+    formData.append("description", description as any);
+    formData.append("title", "title");
+    if (image) {
+      formData.append("image", image as any);
+      const post: any = await axios.post(
+        "http://localhost:3000/post/create",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "x-access-token": auth().token,
+          },
+        }
+      );
+      if (post.data.post.message === "success created post") {
+        alert("Post Create");
+        setImage(null);
+        setDescription("");
+      }
+    } else {
+      const post: any = await axios.post(
+        "http://localhost:3000/post/create",
+        formData,
+        {
+          headers: {
+            "x-access-token": auth().token,
+          },
+        }
+      );
+      if (post.data.post.message === "success created post") {
+        alert("Post Create");
+        setImage(null);
+        setDescription("");
+      }
+    }
   };
   return (
     <div className="main-content right-chat-active">
@@ -68,7 +111,7 @@ export const Flow = () => {
                       </div>
                     </div>
                   ) : (
-                    <></>
+                    <div style={{ display: "none" }}></div>
                   )}
 
                   <div className="item">
@@ -252,6 +295,7 @@ export const Flow = () => {
                 <div className="card w-100 shadow-xss rounded-xxl border-0 ps-4 pt-4 pe-4 pb-3 mb-3">
                   <div className="card-body p-0">
                     <a
+                      onClick={postClick}
                       href="#"
                       className=" font-xssss fw-600 text-grey-500 card-body p-0 d-flex align-items-center"
                     >
@@ -272,7 +316,9 @@ export const Flow = () => {
                       className="h100 bor-0 w-100 rounded-xxl p-2 ps-5 font-xssss text-grey-500 fw-500 border-light-md theme-dark-bg"
                       cols={30}
                       rows={10}
+                      value={description}
                       placeholder="What's on your mind?"
+                      onChange={(e: any) => setDescription(e.target.value)}
                     ></textarea>
                   </div>
                   <div className="card-body d-flex p-0 mt-0">
