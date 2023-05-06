@@ -83,4 +83,10 @@ export class UserService {
       user:(await this.userDataAccess.getFollow(verifyWalletAddr))
     }
   }
+  async getFollowers(token:string) {
+    const verifyWalletAddr = security.jwt.token.verifyToken(token).token?.payload?.walletAddr as string
+    return {
+      user:(await this.userDataAccess.getFollowers(verifyWalletAddr))
+    }
+  }
 }
