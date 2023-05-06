@@ -89,4 +89,10 @@ export class UserService {
       user:(await this.userDataAccess.getFollowers(verifyWalletAddr))
     }
   }
+  async postFollow(token:string,otherWalletAddr:string) {
+    const verifyWalletAddr = security.jwt.token.verifyToken(token).token?.payload?.walletAddr as string
+    return {
+      user:(await this.userDataAccess.postFollow(verifyWalletAddr,otherWalletAddr)).message
+    }
+  }
 }
