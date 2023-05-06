@@ -181,6 +181,47 @@ export class UserDal implements UserRepository {
       }
     });
   }
+  private isFollow(walletAddr: string, otherWalletAddr: string) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await neo4j()
+          ?.readCypher(
+            "match(u1:user {id:$walletAddr}) match(u2:user {id:$otherWalletAddr}) match(u1)-[follow:FOLLOW]->(u2) return count(follow)",
+            { walletAddr, otherWalletAddr }
+          )
+          .catch((err) => console.log(err));
+        const rUser: any = user?.records.map((uss) => {
+          return uss.map((res) => {
+            return res;
+          });
+        });
+        resolve(rUser);
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
+  }
+  private isFollowers(walletAddr: string, otherWalletAddr: string) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await neo4j()
+          ?.readCypher(
+            "match(u1:user {id:$walletAddr}) match(u2:user {id:$otherWalletAddr}) match(u1)-[followers:FOLLOWERS]->(u2) return count(follow)",
+            { walletAddr, otherWalletAddr }
+          )
+          .catch((err) => console.log(err));
+        const rUser: any = user?.records.map((uss) => {
+          return uss.map((res) => {
+            return res;
+          });
+        });
+        console.log(rUser);
+        resolve(rUser);
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
+  }
   getFollowers(walletAddr: string): Promise<IUser> {
     return new Promise(async (resolve, reject) => {
       try {
