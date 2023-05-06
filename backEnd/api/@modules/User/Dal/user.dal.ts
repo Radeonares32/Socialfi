@@ -205,7 +205,20 @@ export class UserDal implements UserRepository {
     walletAddr: string,
     otherWalletAddr: string
   ): Promise<{ message: string }> {
-    throw new Error("Method not implemented.");
+    return new Promise(async (resolve, reject) => {
+      try {
+        await neo4j()
+          ?.writeCypher(
+            "match (f1:user {id:$walletAddr}) match(f2:user {id:$otherWalletAddr}) create(f1)-[follow:FOLLOW]->(f2) create (f2)-[followers:FOLLOWERS]->(f1) ",
+            { walletAddr, otherWalletAddr }
+          )
+          .catch((err) => console.log(err));
+
+        resolve({ message: "Success following" });
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
   }
   deleteFollow(
     walletAddr: string,
