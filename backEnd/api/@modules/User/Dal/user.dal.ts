@@ -181,7 +181,7 @@ export class UserDal implements UserRepository {
       }
     });
   }
-  private isFollow(walletAddr: string, otherWalletAddr: string) {
+  isFollow(walletAddr: string, otherWalletAddr: string): Promise<Number> {
     return new Promise(async (resolve, reject) => {
       try {
         const user = await neo4j()
@@ -195,18 +195,18 @@ export class UserDal implements UserRepository {
             return res;
           });
         });
-        resolve(rUser);
+        resolve(rUser[0][0].low as Number);
       } catch (err) {
         reject({ message: err });
       }
     });
   }
-  private isFollowers(walletAddr: string, otherWalletAddr: string) {
+  isFollowers(walletAddr: string, otherWalletAddr: string): Promise<Number> {
     return new Promise(async (resolve, reject) => {
       try {
         const user = await neo4j()
           ?.readCypher(
-            "match(u1:user {id:$walletAddr}) match(u2:user {id:$otherWalletAddr}) match(u1)-[followers:FOLLOWERS]->(u2) return count(follow)",
+            "match(u1:user {id:$walletAddr}) match(u2:user {id:$otherWalletAddr}) match(u1)-[followers:FOLLOWERS]->(u2) return count(followers)",
             { walletAddr, otherWalletAddr }
           )
           .catch((err) => console.log(err));
@@ -215,8 +215,7 @@ export class UserDal implements UserRepository {
             return res;
           });
         });
-        console.log(rUser);
-        resolve(rUser);
+        resolve(rUser[0][0].low as Number);
       } catch (err) {
         reject({ message: err });
       }
@@ -248,6 +247,7 @@ export class UserDal implements UserRepository {
   ): Promise<{ message: string }> {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log(await this.isFollowers(walletAddr, otherWalletAddr));
         await neo4j()
           ?.writeCypher(
             "match (f1:user {id:$walletAddr}) match(f2:user {id:$otherWalletAddr}) create(f1)-[follow:FOLLOW]->(f2) create (f2)-[followers:FOLLOWERS]->(f1) ",
