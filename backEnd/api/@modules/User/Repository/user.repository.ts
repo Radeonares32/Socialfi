@@ -31,4 +31,14 @@ export interface UserRepository {
     gender: string,
     biography: string
   ): Promise<{ token: string } | { message: string }>;
+  getFollow(walletAddr: string, otherWalletAddr: string): Promise<IUser>;
+  getFollowers(walletAddr: string, otherWalletAddr: string): Promise<IUser>;
+  postFollow(
+    walletAddr: string,
+    otherWalletAddr: string
+  ): Promise<{ message: string }>;
+  deleteFollow(
+    walletAddr: string,
+    otherWalletAddr: string
+  ): Promise<{ message: string }>;
 }
