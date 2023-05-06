@@ -41,4 +41,6 @@ export interface UserRepository {
     walletAddr: string,
     otherWalletAddr: string
   ): Promise<{ message: string }>;
+  isFollow(walletAddr: string, otherWalletAddr: string): Promise<Number>;
+  isFollowers(walletAddr: string, otherWalletAddr: string): Promise<Number>;
 }

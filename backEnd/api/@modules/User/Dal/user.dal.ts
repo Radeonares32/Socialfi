@@ -181,6 +181,46 @@ export class UserDal implements UserRepository {
       }
     });
   }
+  isFollow(walletAddr: string, otherWalletAddr: string): Promise<Number> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await neo4j()
+          ?.readCypher(
+            "match(u1:user {id:$walletAddr}) match(u2:user {id:$otherWalletAddr}) match(u1)-[follow:FOLLOW]->(u2) return count(follow)",
+            { walletAddr, otherWalletAddr }
+          )
+          .catch((err) => console.log(err));
+        const rUser: any = user?.records.map((uss) => {
+          return uss.map((res) => {
+            return res;
+          });
+        });
+        resolve(rUser[0][0].low as Number);
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
+  }
+  isFollowers(walletAddr: string, otherWalletAddr: string): Promise<Number> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await neo4j()
+          ?.readCypher(
+            "match(u1:user {id:$walletAddr}) match(u2:user {id:$otherWalletAddr}) match(u1)-[followers:FOLLOWERS]->(u2) return count(followers)",
+            { walletAddr, otherWalletAddr }
+          )
+          .catch((err) => console.log(err));
+        const rUser: any = user?.records.map((uss) => {
+          return uss.map((res) => {
+            return res;
+          });
+        });
+        resolve(rUser[0][0].low as Number);
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
+  }
   getFollowers(walletAddr: string): Promise<IUser> {
     return new Promise(async (resolve, reject) => {
       try {
@@ -207,6 +247,7 @@ export class UserDal implements UserRepository {
   ): Promise<{ message: string }> {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log(await this.isFollowers(walletAddr, otherWalletAddr));
         await neo4j()
           ?.writeCypher(
             "match (f1:user {id:$walletAddr}) match(f2:user {id:$otherWalletAddr}) create(f1)-[follow:FOLLOW]->(f2) create (f2)-[followers:FOLLOWERS]->(f1) ",

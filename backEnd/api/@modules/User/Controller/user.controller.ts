@@ -100,4 +100,18 @@ export class UserController {
       user: (await this.userService.deleteFollow(token, otherWalletAddr)).user,
     });
   };
+  isFollow: Handler = async (req, res) => {
+    const token = req.headers["x-access-token"] as string;
+    const { otherWalletAddr } = req.body;
+    res.json({
+      user: (await this.userService.isFollow(token, otherWalletAddr)).user,
+    });
+  };
+  isFollowers: Handler = async (req, res) => {
+    const token = req.headers["x-access-token"] as string;
+    const { otherWalletAddr } = req.body;
+    res.json({
+      user: (await this.userService.isFollowers(token, otherWalletAddr)).user,
+    });
+  };
 }
