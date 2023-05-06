@@ -161,4 +161,39 @@ export class UserDal implements UserRepository {
       }
     });
   }
+  getFollow(walletAddr: string): Promise<IUser> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await neo4j()
+          ?.cypher(
+            "match (n:user {id:$walletAddr})-[:FOLLOW]->(n1:user) return n1",
+            { walletAddr }
+          )
+          .catch((err) => console.log(err));
+        const rUser = user?.records.map((uss) => {
+          return uss.map((res) => {
+            return res;
+          });
+        });
+        resolve(rUser as any);
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
+  }
+  getFollowers(walletAddr: string): Promise<IUser> {
+    throw new Error("Method not implemented.");
+  }
+  postFollow(
+    walletAddr: string,
+    otherWalletAddr: string
+  ): Promise<{ message: string }> {
+    throw new Error("Method not implemented.");
+  }
+  deleteFollow(
+    walletAddr: string,
+    otherWalletAddr: string
+  ): Promise<{ message: string }> {
+    throw new Error("Method not implemented.");
+  }
 }
