@@ -119,4 +119,24 @@ export class UserService {
       ).message,
     };
   }
+  async isFollow(token: string, otherWalletAddr: string) {
+    const verifyWalletAddr = security.jwt.token.verifyToken(token).token
+      ?.payload?.walletAddr as string;
+    return {
+      user: await this.userDataAccess.isFollow(
+        verifyWalletAddr,
+        otherWalletAddr
+      ),
+    };
+  }
+  async isFollowers(token: string, otherWalletAddr: string) {
+    const verifyWalletAddr = security.jwt.token.verifyToken(token).token
+      ?.payload?.walletAddr as string;
+    return {
+      user: await this.userDataAccess.isFollowers(
+        verifyWalletAddr,
+        otherWalletAddr
+      ),
+    };
+  }
 }
