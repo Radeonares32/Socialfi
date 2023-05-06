@@ -1,6 +1,7 @@
 import { Handler } from "express";
 
 import { UserService } from "../Service/user.service";
+import { security } from "../../../security/security";
 
 export class UserController {
   private userService: UserService = new UserService();
@@ -70,7 +71,33 @@ export class UserController {
           gender,
           biography
         )
-      ).user
+      ).user,
+    });
+  };
+  getFollow: Handler = async (req, res) => {
+    const token = req.headers["x-access-token"] as string;
+    res.json({
+      user: (await this.userService.getFollow(token)).user,
+    });
+  };
+  getFollowers: Handler = async (req, res) => {
+    const token = req.headers["x-access-token"] as string;
+    res.json({
+      user: (await this.userService.getFollowers(token)).user,
+    });
+  };
+  postFollow: Handler = async (req, res) => {
+    const token = req.headers["x-access-token"] as string;
+    const { otherWalletAddr } = req.body;
+    res.json({
+      user: (await this.userService.postFollow(token, otherWalletAddr)).user,
+    });
+  };
+  deleteFollow: Handler = async (req, res) => {
+    const token = req.headers["x-access-token"] as string;
+    const { otherWalletAddr } = req.body;
+    res.json({
+      user: (await this.userService.deleteFollow(token, otherWalletAddr)).user,
     });
   };
 }
