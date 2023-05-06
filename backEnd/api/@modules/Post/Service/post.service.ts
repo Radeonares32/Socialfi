@@ -2,8 +2,11 @@ import { security } from "../../../security/security";
 
 import { PostDal } from "../Dal/post.dal";
 
+import { NotificaitonService } from '../../Notification/Service/notification.service'
+
 export class PostService {
   private postDal: PostDal = new PostDal();
+  private notificationService:NotificaitonService = new NotificaitonService()
   async findAll() {
     return {
       post: await this.postDal.findAll(),

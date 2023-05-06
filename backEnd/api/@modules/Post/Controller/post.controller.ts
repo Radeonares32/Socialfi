@@ -41,7 +41,7 @@ export class PostController {
             title,
             description,
             format(new Date(), "YYYY/MM/DD HH:mm:ss"),
-            image[0]
+            image[0].originalname
           )
         ).post,
       });
@@ -71,7 +71,7 @@ export class PostController {
             title,
             description,
             format(new Date(), "YYYY/MM/DD HH:mm:ss"),
-            image[0]
+            image[0].originalname
           )
         ).post,
       });

@@ -7,7 +7,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('./dom/data.js')) :
   typeof define === 'function' && define.amd ? define(['./dom/data'], factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Base = factory(global.Data));
-}(this, (function (Data) { 'use strict';
+}(this, (function (Data) { 
 
   function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
