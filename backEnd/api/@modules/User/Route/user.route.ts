@@ -2,6 +2,7 @@ import express, { Handler } from "express";
 const app = express.Router();
 
 import { UserController } from "../Controller/user.controller";
+import { Middlewares } from "../../../middleware/middleware";
 
 const userController: UserController = new UserController();
 
@@ -10,6 +11,16 @@ export const getUsersRoute: Handler = app.get("/", userController.getUsers);
 export const getUserRoute: Handler = app.get(
   "/profile/:id",
   userController.getUser
+);
+export const getFollowRoute: Handler = app.get(
+  "/getFollow",
+  Middlewares.userAuth,
+  userController.getFollow
+);
+export const getFollowersRoute: Handler = app.get(
+  "/getFollowers",
+  Middlewares.userAuth,
+  userController.getFollowers
 );
 
 //Post
@@ -25,6 +36,11 @@ export const loginWalletRoute: Handler = app.post(
   "/loginWallet",
   userController.loginWalletUser
 );
+export const postFollowRoute: Handler = app.post(
+  "/postFollow",
+  Middlewares.userAuth,
+  userController.postFollow
+);
 
 //Put
 export const putUserRoute: Handler = app.put("/update", userController.putUser);
@@ -33,4 +49,9 @@ export const putUserRoute: Handler = app.put("/update", userController.putUser);
 export const deleteUserRoute: Handler = app.delete(
   "/delete",
   userController.deleteUser
+);
+export const deleteFollowRoute: Handler = app.delete(
+  "/deleteFollow",
+  Middlewares.userAuth,
+  userController.deleteFollow
 );
