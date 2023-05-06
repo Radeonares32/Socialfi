@@ -161,4 +161,81 @@ export class UserDal implements UserRepository {
       }
     });
   }
+  getFollow(walletAddr: string): Promise<IUser> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await neo4j()
+          ?.cypher(
+            "match (n:user {id:$walletAddr})-[:FOLLOW]->(n1:user) return n1",
+            { walletAddr }
+          )
+          .catch((err) => console.log(err));
+        const rUser = user?.records.map((uss) => {
+          return uss.map((res) => {
+            return res;
+          });
+        });
+        resolve(rUser as any);
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
+  }
+  getFollowers(walletAddr: string): Promise<IUser> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await neo4j()
+          ?.cypher(
+            "match (n:user {id:$walletAddr})-[followers:FOLLOWERS]->(n1:user) return n1",
+            { walletAddr }
+          )
+          .catch((err) => console.log(err));
+        const rUser = user?.records.map((uss) => {
+          return uss.map((res) => {
+            return res;
+          });
+        });
+        resolve(rUser as any);
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
+  }
+  postFollow(
+    walletAddr: string,
+    otherWalletAddr: string
+  ): Promise<{ message: string }> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await neo4j()
+          ?.writeCypher(
+            "match (f1:user {id:$walletAddr}) match(f2:user {id:$otherWalletAddr}) create(f1)-[follow:FOLLOW]->(f2) create (f2)-[followers:FOLLOWERS]->(f1) ",
+            { walletAddr, otherWalletAddr }
+          )
+          .catch((err) => console.log(err));
+
+        resolve({ message: "Success following" });
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
+  }
+  deleteFollow(
+    walletAddr: string,
+    otherWalletAddr: string
+  ): Promise<{ message: string }> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await neo4j()
+          ?.writeCypher(
+            "match(f1:user {id:$walletAddr})-[follow:FOLLOW]->(f2:user {id:$otherWalletAddr}) match(f2:user {id:$otherWalletAddr})-[followers:FOLLOWERS]->(f1:user {id:$walletAddr}) delete followers,follow",
+            { walletAddr, otherWalletAddr }
+          )
+          .catch((err) => console.log(err));
+        resolve({ message: "Success un follow" });
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
+  }
 }

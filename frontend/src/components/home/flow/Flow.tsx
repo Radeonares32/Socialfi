@@ -945,7 +945,7 @@ export const Flow = () => {
                         </div>
                       </div>
                       <div className="card-body p-0 mb-3 rounded-3 overflow-hidden">
-                        <a href="#" className="video-btn">
+                        <a href="#" className="roadtri">
                           <img
                             src={
                               "http://localhost:3000/public/posts/" +
