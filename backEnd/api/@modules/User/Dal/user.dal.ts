@@ -247,8 +247,13 @@ export class UserDal implements UserRepository {
   ): Promise<{ message: string }> {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log(await this.isFollowers(walletAddr, otherWalletAddr));
-        await neo4j()
+        const isFollow = await this.isFollow(walletAddr, otherWalletAddr)
+        const isFollowers = await this.isFollowers(otherWalletAddr, walletAddr)
+        if(isFollow == 1 && isFollowers == 1) {
+          resolve({ message: "Already following" });
+        }
+        else {
+          await neo4j()
           ?.writeCypher(
             "match (f1:user {id:$walletAddr}) match(f2:user {id:$otherWalletAddr}) create(f1)-[follow:FOLLOW]->(f2) create (f2)-[followers:FOLLOWERS]->(f1) ",
             { walletAddr, otherWalletAddr }
@@ -256,6 +261,7 @@ export class UserDal implements UserRepository {
           .catch((err) => console.log(err));
 
         resolve({ message: "Success following" });
+        }
       } catch (err) {
         reject({ message: err });
       }
