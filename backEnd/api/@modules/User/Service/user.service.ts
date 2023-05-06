@@ -1,3 +1,4 @@
+import { security } from "../../../security/security";
 import { UserDal } from "../Dal/user.dal";
 
 export class UserService {
@@ -74,6 +75,12 @@ export class UserService {
   ) {
     return {
       user: (await this.userDataAccess.loginWallet(walletAddr,name,surname,date,gender,biography))
+    }
+  }
+  async getFollow(token:string) {
+    const verifyWalletAddr = security.jwt.token.verifyToken(token).token?.payload?.walletAddr as string
+    return {
+      user:(await this.userDataAccess.getFollow(verifyWalletAddr))
     }
   }
 }
