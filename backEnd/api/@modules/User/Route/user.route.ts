@@ -12,22 +12,22 @@ export const getUserRoute: Handler = app.get(
   "/profile/:id",
   userController.getUser
 );
-export const getFollowRoute: Handler = app.get(
+export const getFollowRoute: Handler = app.post(
   "/getFollow",
   Middlewares.userAuth,
   userController.getFollow
 );
-export const getFollowersRoute: Handler = app.get(
+export const getFollowersRoute: Handler = app.post(
   "/getFollowers",
   Middlewares.userAuth,
   userController.getFollowers
 );
-export const getIsFollowRoute: Handler = app.get(
+export const getIsFollowRoute: Handler = app.post(
   "/getIsFollow",
   Middlewares.userAuth,
   userController.isFollow
 );
-export const getIsFollowersRoute: Handler = app.get(
+export const getIsFollowersRoute: Handler = app.post(
   "/getIsFollowers",
   Middlewares.userAuth,
   userController.isFollowers
