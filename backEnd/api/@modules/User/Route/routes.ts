@@ -9,6 +9,10 @@ import {
   putUserRoute,
   signWalletRoute,
   loginWalletRoute,
+  deleteFollowRoute,
+  getFollowRoute,
+  getFollowersRoute,
+  postFollowRoute
 } from "./user.route";
 
 export const userRoutes = app.use(
@@ -19,5 +23,9 @@ export const userRoutes = app.use(
   postUserRoute,
   putUserRoute,
   signWalletRoute,
-  loginWalletRoute
+  loginWalletRoute,
+  deleteFollowRoute,
+  getFollowRoute,
+  getFollowersRoute,
+  postFollowRoute
 );
