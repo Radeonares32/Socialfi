@@ -2,6 +2,8 @@ import express from "express";
 import http from "http";
 import bodyParser from "body-parser";
 import cors from "cors";
+import path from 'path'
+
 const app = express();
 const server = http.createServer(app);
 
@@ -13,6 +15,7 @@ app.use(
     allowedHeaders: "*",
   })
 );
+app.use('/public',express.static( path.join(__dirname,'../public')))
 
 import { userRoutes } from "./api/@modules/User/Route/routes";
 import { notificaitonRoutes } from "./api/@modules/Notification/Route/routes";

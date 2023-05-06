@@ -1,28 +1,21 @@
 {
-    "compilerOptions": {
-        
-        "lib": [
-            "ESNext"
-        ],
-        "useDefineForClassFields": true,
-        "strict": true,
-        "module": "CommonJS",
-        "alwaysStrict": true,
-        "moduleResolution": "Node",
-        "esModuleInterop": true,
-        "isolatedModules": false,
-        "target": "ES6",
-        "outDir": "./dist",
-        "rootDir": "./",
-        "allowSyntheticDefaultImports": true,
-        "strictPropertyInitialization": false,
-        "resolveJsonModule": true
-        
-    },
-    "exclude": [
-        "node_modules"
-    ],
-    "include": [
-        "./**/*"
-    ]
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "useDefineForClassFields": true,
+    "strict": true,
+    "module": "CommonJS",
+    "alwaysStrict": true,
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "isolatedModules": false,
+    "target": "ES6",
+    "outDir": "./dist",
+    "rootDir": "./",
+    "allowSyntheticDefaultImports": true,
+    "strictPropertyInitialization": false,
+    "resolveJsonModule": true
+  },
+  "exclude": ["node_modules"],
+  "include": ["./**/*"],
+  "typeRoots": ["./src/@types", "./node_modules/@types"]
 }
