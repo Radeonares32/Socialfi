@@ -22,6 +22,16 @@ export const getFollowersRoute: Handler = app.get(
   Middlewares.userAuth,
   userController.getFollowers
 );
+export const getIsFollowRoute: Handler = app.get(
+  "/getIsFollow",
+  Middlewares.userAuth,
+  userController.isFollow
+);
+export const getIsFollowersRoute: Handler = app.get(
+  "/getIsFollowers",
+  Middlewares.userAuth,
+  userController.isFollowers
+);
 
 //Post
 export const postUserRoute: Handler = app.post(
