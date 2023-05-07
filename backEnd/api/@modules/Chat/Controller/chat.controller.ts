@@ -57,4 +57,10 @@ export class ChatController {
       chat: (await this.chatService.getFindUserMessage(token)).chat,
     });
   };
+  getFindMessageUser: Handler = async (req, res) => {
+    const { messageId } = req.body;
+    res.json({
+      chat: (await this.chatService.getFindMessageUser(messageId)).chat,
+    });
+  };
 }
