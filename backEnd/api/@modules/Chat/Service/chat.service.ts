@@ -118,4 +118,21 @@ export class ChatService {
       };
     }
   }
+  async postCreateUserMessage(chatId: string, token: string, message: string) {
+    const verifyWalletAddr = security.jwt.token.verifyToken(token).token
+      ?.payload?.walletAddr as string;
+    if (token && chatId && message) {
+      return {
+        chat: await this.chatDal.createUserMessage(
+          chatId,
+          verifyWalletAddr,
+          message
+        ),
+      };
+    } else {
+      return {
+        chat: "token or chatId or message not found",
+      };
+    }
+  }
 }
