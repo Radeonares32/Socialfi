@@ -35,4 +35,15 @@ export class ChatService {
       };
     }
   }
+  async getFindUserChatRoom(chatId: string) {
+    if (chatId) {
+      return {
+        chat: await this.chatDal.findUserChatRoom(chatId),
+      };
+    } else {
+      return {
+        chat: "chatId not found",
+      };
+    }
+  }
 }
