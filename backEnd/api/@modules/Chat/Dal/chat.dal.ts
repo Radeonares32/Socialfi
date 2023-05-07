@@ -29,7 +29,7 @@ export class ChatDal implements ChatRepository {
         const chat: any = await neo4j()?.readCypher(
           "match (c:chat {id:$chatId}) return c",
           { chatId }
-        );
+        ).catch((err) => console.log(err));
         const rChat: any = chat.records.map((uss: any) => {
           return uss.map((res: any) => {
             return res.properties;
@@ -46,12 +46,12 @@ export class ChatDal implements ChatRepository {
         const message: any = await neo4j()?.readCypher(
             "match (m:message) return m",
             {  }
-          );
+          ).catch((err) => console.log(err));
           const rMessage: any = message.records.map((uss: any) => {
             return uss.map((res: any) => {
               return res.properties;
             });
-          });
+          })
           resolve(rMessage as IChatMessage[])
       try {
       } catch (err) {
@@ -64,7 +64,7 @@ export class ChatDal implements ChatRepository {
         const message: any = await neo4j()?.readCypher(
             "match (m:message {id:$messageId}) return m",
             { messageId }
-          );
+          ).catch((err) => console.log(err));
           const rMessage: any = message.records.map((uss: any) => {
             return uss.map((res: any) => {
               return res.properties;
@@ -82,7 +82,7 @@ export class ChatDal implements ChatRepository {
         const user: any = await neo4j()?.readCypher(
             "match(c:chat {id:$chatId}) match(u:user) match(u)-[:userChatRel]->(c) return u",
             { chatId }
-          );
+          ).catch((err) => console.log(err));
           const rUser:any = user.records.map((uss: any) => {
             return uss.map((res: any) => {
               return res.properties;
@@ -101,7 +101,7 @@ export class ChatDal implements ChatRepository {
         const chat: any = await neo4j()?.readCypher(
           "match(u:user {id:$walletAddr}) match(c:chat) match(c)-[:chatUserRel]->(u) return c",
           { walletAddr }
-        );
+        ).catch((err) => console.log(err));
         const rChat: any = chat.records.map((uss: any) => {
           return uss.map((res: any) => {
             return res.properties;
@@ -116,6 +116,16 @@ export class ChatDal implements ChatRepository {
   findChatMessages(chatId: string): Promise<IChatMessage[]> {
     return new Promise(async (resolve, reject) => {
       try {
+        const message: any = await neo4j()?.readCypher(
+            "match(c:chat {id:$chatId}) match(m:message) match(m)-[:chatMessageRel]->(c) return m",
+            { chatId }
+          ).catch((err) => console.log(err));;
+          const rMessage: any = message.records.map((uss: any) => {
+            return uss.map((res: any) => {
+              return res.properties;
+            });
+          });
+          resolve(rMessage as IChatMessage[])
       } catch (err) {
         reject({ message: err });
       }
