@@ -65,4 +65,17 @@ export class ChatService {
       };
     }
   }
+  async getFindChatMessageUser(chatId:string,token:string) {
+    const verifyWalletAddr = security.jwt.token.verifyToken(token).token
+    ?.payload?.walletAddr as string;
+    if (chatId && token) {
+      return {
+        chat: await this.chatDal.findChatMessageUser(chatId,verifyWalletAddr),
+      };
+    } else {
+      return {
+        chat: "chatId or walletAddr not found",
+      };
+    }
+  }
 }
