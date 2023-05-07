@@ -54,4 +54,15 @@ export class ChatService {
       chat: await this.chatDal.findChatRoomUser(verifyWalletAddr),
     };
   }
+  async getFindChatMessages(chatId:string) {
+    if (chatId) {
+      return {
+        chat: await this.chatDal.findChatMessages(chatId),
+      };
+    } else {
+      return {
+        chat: "chatId not found",
+      };
+    }
+  }
 }
