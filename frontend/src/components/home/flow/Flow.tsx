@@ -12,6 +12,8 @@ export const Flow = () => {
   const [user, setUser] = useState<any>();
   const [follow, setFollow] = useState<any>();
   const [followers, setFollowers] = useState<any>();
+  const [getFollow,setGetFollow] = useState<any>()
+  const [getFollowers,setGetFollowers] = useState<any>()
   const fileClick = () => {
     if (fileRef.current) {
       fileRef.current.click();
@@ -60,7 +62,12 @@ export const Flow = () => {
       }
     }
   };
-
+  const clickFollow = async(e:any) => {
+    e.preventDefault()
+    await axios.post('http://localhost:3000/user/postFollow',{otherWalletAddr:e.target.id},{
+      headers:{'x-access-token':auth().token}
+    })
+  }
   useEffect(() => {
     axios.get("http://localhost:3000/post/").then((posts: any) => {
       setPosts(posts.data.post);
@@ -88,7 +95,7 @@ export const Flow = () => {
           
         });
     }
-  }, [isAuth()]);
+  }, [clickFollow]);
   useEffect(() => {
     if (isAuth()) {
       axios
@@ -104,6 +111,20 @@ export const Flow = () => {
         });
     }
   }, [isAuth()]);
+  useEffect(()=>{
+    if(isAuth()) {
+      axios.post('http://localhost:3000/user/getFollow',{},{headers:{'x-access-token':auth().token}}).then((folls:any)=>{
+        setGetFollow(folls.data.user)
+      })
+    }
+  },[])
+  useEffect(()=>{
+    if(isAuth()) {
+      axios.post('http://localhost:3000/user/getFollowers',{},{headers:{'x-access-token':auth().token}}).then((folls:any)=>{
+        setGetFollowers(folls.data.user)
+      })
+    }
+  },[])
   return (
     <div className="main-content right-chat-active">
       <div className="middle-sidebar-bottom">
@@ -2053,6 +2074,8 @@ export const Flow = () => {
                     </div>
                     <div className="card-body d-flex align-items-center pt-0 ps-4 pe-4 pb-4">
                       <a
+                        id={fol[0].id}
+                        onClick={clickFollow}
                         href=""
                         className="p-2 lh-20 w100 bg-primary-gradiant me-2 text-black text-center font-xssss fw-600 ls-1 rounded-xl"
                       >
@@ -2073,7 +2096,7 @@ export const Flow = () => {
               <div className="card w-100 shadow-xss rounded-xxl border-0 p-0 ">
                 <div className="card-body d-flex align-items-center p-4 mb-0">
                   <h4 className="fw-700 mb-0 font-xssss text-grey-900">
-                    Friend Request
+                    Friend Follow
                   </h4>
                   <a
                     href="#"
@@ -2082,68 +2105,68 @@ export const Flow = () => {
                     See all
                   </a>
                 </div>
-                <div className="card-body bg-transparent-card d-flex p-3 bg-greylight ms-3 me-3 rounded-3">
-                  <figure className="avatar me-2 mb-0">
-                    <img
-                      src="https://via.placeholder.com/50x50.png"
-                      alt="image"
-                      className="shadow-sm rounded-circle w45"
-                    />
-                  </figure>
-                  <h4 className="fw-700 text-grey-900 font-xssss mt-2">
-                    Anthony Daugloi{" "}
-                    <span className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">
-                      12 mutual friends
-                    </span>
-                  </h4>
-                  <a
-                    href="#"
-                    className="btn-round-sm bg-white text-grey-900 feather-chevron-right font-xss ms-auto mt-2"
-                  ></a>
-                </div>
-                <div
-                  className="card-body bg-transparent-card d-flex p-3 bg-greylight m-3 rounded-3"
-                  style={{ marginBottom: "0 !important" }}
-                >
-                  <figure className="avatar me-2 mb-0">
-                    <img
-                      src="https://via.placeholder.com/50x50.png"
-                      alt="image"
-                      className="shadow-sm rounded-circle w45"
-                    />
-                  </figure>
-                  <h4 className="fw-700 text-grey-900 font-xssss mt-2">
-                    {" "}
-                    David Agfree{" "}
-                    <span className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">
-                      12 mutual friends
-                    </span>
-                  </h4>
-                  <a
-                    href="#"
-                    className="btn-round-sm bg-white text-grey-900 feather-plus font-xss ms-auto mt-2"
-                  ></a>
-                </div>
-                <div className="card-body bg-transparent-card d-flex p-3 bg-greylight m-3 rounded-3">
-                  <figure className="avatar me-2 mb-0">
-                    <img
-                      src="https://via.placeholder.com/50x50.png"
-                      alt="image"
-                      className="shadow-sm rounded-circle w45"
-                    />
-                  </figure>
-                  <h4 className="fw-700 text-grey-900 font-xssss mt-2">
-                    Hugury Daugloi{" "}
-                    <span className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">
-                      12 mutual friends
-                    </span>
-                  </h4>
-                  <a
-                    href="#"
-                    className="btn-round-sm bg-white text-grey-900 feather-plus font-xss ms-auto mt-2"
-                  ></a>
-                </div>
+                {(getFollow && isAuth()) && getFollow.map((fol:any,key:any)=>(
+                   <div key={key} className="card-body bg-transparent-card d-flex p-3 bg-greylight ms-3 me-3 rounded-3">
+                   <figure className="avatar me-2 mb-0">
+                     <img
+                       src="https://via.placeholder.com/50x50.png"
+                       alt="image"
+                       className="shadow-sm rounded-circle w45"
+                     />
+                   </figure>
+                   <h4 className="fw-700 text-grey-900 font-xssss mt-2">
+                     {fol[0].name} {fol[0].surname}
+                     <span className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">
+                       12 mutual friends
+                     </span>
+                   </h4>
+                   <a
+                     href="#"
+                     className="btn-round-sm bg-white text-grey-900 feather-chevron-right font-xss ms-auto mt-2"
+                   ></a>
+                 </div>
+                ))}
+               
+                
               </div>
+
+              <div className="card w-100 shadow-xss rounded-xxl border-0 p-0 ">
+                <div className="card-body d-flex align-items-center p-4 mb-0">
+                  <h4 className="fw-700 mb-0 font-xssss text-grey-900">
+                    Friend Followers
+                  </h4>
+                  <a
+                    href="#"
+                    className="fw-600 ms-auto font-xssss text-primary"
+                  >
+                    See all
+                  </a>
+                </div>
+                {(getFollowers && isAuth()) && getFollowers.map((fol:any,key:any)=>(
+                   <div key={key} className="card-body bg-transparent-card d-flex p-3 bg-greylight ms-3 me-3 rounded-3">
+                   <figure className="avatar me-2 mb-0">
+                     <img
+                       src="https://via.placeholder.com/50x50.png"
+                       alt="image"
+                       className="shadow-sm rounded-circle w45"
+                     />
+                   </figure>
+                   <h4 className="fw-700 text-grey-900 font-xssss mt-2">
+                     {fol[0].name} {fol[0].surname}
+                     <span className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">
+                       12 mutual friends
+                     </span>
+                   </h4>
+                   <a
+                     href="#"
+                     className="btn-round-sm bg-white text-grey-900 feather-chevron-right font-xss ms-auto mt-2"
+                   ></a>
+                 </div>
+                ))}
+               
+                
+              </div>
+
 
               <div className="card w-100 shadow-xss rounded-xxl border-0 mb-3 mt-3">
                 <div className="card-body d-flex align-items-center p-4">

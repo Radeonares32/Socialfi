@@ -172,7 +172,7 @@ export class UserDal implements UserRepository {
           .catch((err) => console.log(err));
         const rUser = user?.records.map((uss) => {
           return uss.map((res) => {
-            return res;
+            return res.properties;
           });
         });
         resolve(rUser as any);
@@ -212,7 +212,7 @@ export class UserDal implements UserRepository {
           .catch((err) => console.log(err));
         const rUser: any = user?.records.map((uss) => {
           return uss.map((res) => {
-            return res;
+            return res.properties;
           });
         });
         resolve(rUser[0][0].low as Number);
@@ -232,7 +232,7 @@ export class UserDal implements UserRepository {
           .catch((err) => console.log(err));
         const rUser = user?.records.map((uss) => {
           return uss.map((res) => {
-            return res;
+            return res.properties;
           });
         });
         resolve(rUser as any);
