@@ -152,9 +152,11 @@ export class ChatDal implements ChatRepository {
       }
     });
   }
-  createChatRoom(): Promise<{ message: string }> {
+  createChatRoom(walletAddr:string,otherWalletAddr:string): Promise<{ message: string }> {
     return new Promise(async (resolve, reject) => {
       try {
+        await neo4j()?.writeCypher("match(u1:user {id:$walletAddr}) match(u2:user {id:$otherWalletAddr}) create(c:chat {id:$id}) create(u1)-[:userChatRel]->(c) create(u2)-[:userChatRel]->(c)",{walletAddr,otherWalletAddr})
+        resolve({message:"success chat room"})
       } catch (err) {
         reject({ message: err });
       }
