@@ -1,3 +1,4 @@
+import { security } from "../../../security/security";
 import { ChatDal } from "../Dal/chat.dal";
 
 export class ChatService {
@@ -45,5 +46,12 @@ export class ChatService {
         chat: "chatId not found",
       };
     }
+  }
+  async getFindChatRoomUser(token: string) {
+    const verifyWalletAddr = security.jwt.token.verifyToken(token).token
+      ?.payload?.walletAddr as string;
+    return {
+      chat: await this.chatDal.findChatRoomUser(verifyWalletAddr),
+    };
   }
 }
