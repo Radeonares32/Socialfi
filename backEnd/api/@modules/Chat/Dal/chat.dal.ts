@@ -5,6 +5,8 @@ import { IUser } from "../../User/Entity/IUser";
 import { ChatRepository } from "../Repository/chat.repo";
 import { neo4j } from "../../../../core/dataSource/neo4j/neo4j";
 
+import { v4 as uuid } from "uuid";
+
 export class ChatDal implements ChatRepository {
   findAllChat(): Promise<IChatRoom[]> {
     return new Promise(async (resolve, reject) => {
@@ -159,6 +161,46 @@ export class ChatDal implements ChatRepository {
       }
     });
   }
+  findUserMessage(walletAddr: string): Promise<IChatMessage[]> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const message: any = await neo4j()
+          ?.readCypher(
+            "match(u:user {id:$walletAddr}) match(m:message) match(u)-[:userMessageRel]->(m) return m",
+            { walletAddr }
+          )
+          .catch((err) => console.log(err));
+        const rMessage: any = message.records.map((uss: any) => {
+          return uss.map((res: any) => {
+            return res.properties;
+          });
+        });
+        resolve(rMessage as IChatMessage[]);
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
+  }
+  findMessageUser(messageId: string): Promise<IUser> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user: any = await neo4j()
+          ?.readCypher(
+            "match(m:message{id:$messageId}) match(u:user) match(m)-[:messageUserRel]->(u)",
+            { messageId }
+          )
+          .catch((err) => console.log(err));
+        const rUser: any = user.records.map((uss: any) => {
+          return uss.map((res: any) => {
+            return res.properties;
+          });
+        });
+        resolve(rUser as IUser);
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
+  }
   createChatRoom(
     walletAddr: string,
     otherWalletAddr: string
@@ -168,7 +210,7 @@ export class ChatDal implements ChatRepository {
         await neo4j()
           ?.writeCypher(
             "match(u1:user {id:$walletAddr}) match(u2:user {id:$otherWalletAddr}) create(c:chat {id:$id}) create(u1)-[:userChatRel]->(c) create(u2)-[:userChatRel]->(c)",
-            { walletAddr, otherWalletAddr }
+            { walletAddr, otherWalletAddr, id: uuid() }
           )
           .catch((err) => console.log(err));
         resolve({ message: "success chat room" });
@@ -185,8 +227,8 @@ export class ChatDal implements ChatRepository {
     return new Promise(async (resolve, reject) => {
       try {
         await neo4j()?.writeCypher(
-          "match(c:chat{id:$chatId}) match(u:user{id:$walletAddr}) create(m:message) create(m)-[:messageUserRel]->(u) create(u)-[:userMessageRel]->(m) create(m)-[:chatMessageRel]->(c) create(c)-[:messageChatRel]->(m)",
-          { chatId, walletAddr, message }
+          "match(c:chat{id:$chatId}) match(u:user{id:$walletAddr}) create(m:message{id:$id}) create(m)-[:messageUserRel]->(u) create(u)-[:userMessageRel]->(m) create(m)-[:chatMessageRel]->(c) create(c)-[:messageChatRel]->(m)",
+          { chatId, walletAddr, message, id: uuid() }
         );
         resolve({ message: "success message" });
       } catch (err) {
