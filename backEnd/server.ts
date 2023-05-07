@@ -5,7 +5,7 @@ import cors from "cors";
 import path from "path";
 
 const app = express();
-const server = http.createServer(app);
+export const server = http.createServer(app);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
