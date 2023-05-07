@@ -227,7 +227,7 @@ export class ChatDal implements ChatRepository {
     return new Promise(async (resolve, reject) => {
       try {
         await neo4j()?.writeCypher(
-          "match(c:chat{id:$chatId}) match(u:user{id:$walletAddr}) create(m:message{id:$id}) create(m)-[:messageUserRel]->(u) create(u)-[:userMessageRel]->(m) create(m)-[:chatMessageRel]->(c) create(c)-[:messageChatRel]->(m)",
+          "match(c:chat{id:$chatId}) match(u:user{id:$walletAddr}) create(m:message{id:$id,message:$message}) create(m)-[:messageUserRel]->(u) create(u)-[:userMessageRel]->(m) create(m)-[:chatMessageRel]->(c) create(c)-[:messageChatRel]->(m)",
           { chatId, walletAddr, message, id: uuid() }
         );
         resolve({ message: "success message" });
