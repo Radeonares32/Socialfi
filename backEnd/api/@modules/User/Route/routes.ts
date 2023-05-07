@@ -15,6 +15,8 @@ import {
   postFollowRoute,
   getIsFollowRoute,
   getIsFollowersRoute,
+  userFollowersRoute,
+  userFollowsRoute,
 } from "./user.route";
 
 export const userRoutes = app.use(
@@ -31,5 +33,7 @@ export const userRoutes = app.use(
   getFollowersRoute,
   postFollowRoute,
   getIsFollowRoute,
-  getIsFollowersRoute
+  getIsFollowersRoute,
+  userFollowersRoute,
+  userFollowsRoute
 );
