@@ -291,7 +291,7 @@ export class UserDal implements UserRepository {
           const user = await neo4j()?.readCypher("match(u1:user) match(u:user) where u.id = $walletAddr and not (u)-[:FOLLOWERS]->(u1) return u1",{walletAddr}).catch(err=>console.log(err))
           const rUser:any = user?.records.map((uss) => {
             return uss.map((res) => {
-              return res;
+              return res.properties;
             });
           });
           resolve(rUser as IUser[])
@@ -306,7 +306,7 @@ export class UserDal implements UserRepository {
           const user = await neo4j()?.readCypher("match(u1:user) match(u:user) where u.id = $walletAddr and not (u)-[:FOLLOWERS]->(u1) return u1",{walletAddr}).catch(err=>console.log(err))
           const rUser:any = user?.records.map((uss) => {
             return uss.map((res) => {
-              return res;
+              return res.properties;
             });
           });
           resolve(rUser as IUser[])
