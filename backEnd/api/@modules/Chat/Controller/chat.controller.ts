@@ -48,7 +48,7 @@ export class ChatController {
     const { chatId } = req.body;
     const token = req.headers["x-access-token"] as string;
     res.json({
-      chat: (await this.chatService.getFindChatMessageUser(chatId,token)).chat,
+      chat: (await this.chatService.getFindChatMessageUser(chatId, token)).chat,
     });
   };
   getFindUserMessage: Handler = async (req, res) => {
@@ -67,7 +67,17 @@ export class ChatController {
     const { otherWalletAddr } = req.body;
     const token = req.headers["x-access-token"] as string;
     res.json({
-      chat: (await this.chatService.postCreateChatRoom(token,otherWalletAddr)).chat,
+      chat: (await this.chatService.postCreateChatRoom(token, otherWalletAddr))
+        .chat,
+    });
+  };
+  postCreateUserMessage: Handler = async (req, res) => {
+    const { chatId, message } = req.body;
+    const token = req.headers["x-access-token"] as string;
+    res.json({
+      chat: (
+        await this.chatService.postCreateUserMessage(chatId, token, message)
+      ).chat,
     });
   };
 }
