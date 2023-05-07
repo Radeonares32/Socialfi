@@ -54,7 +54,7 @@ export class ChatService {
       chat: await this.chatDal.findChatRoomUser(verifyWalletAddr),
     };
   }
-  async getFindChatMessages(chatId:string) {
+  async getFindChatMessages(chatId: string) {
     if (chatId) {
       return {
         chat: await this.chatDal.findChatMessages(chatId),
@@ -65,16 +65,29 @@ export class ChatService {
       };
     }
   }
-  async getFindChatMessageUser(chatId:string,token:string) {
+  async getFindChatMessageUser(chatId: string, token: string) {
     const verifyWalletAddr = security.jwt.token.verifyToken(token).token
-    ?.payload?.walletAddr as string;
+      ?.payload?.walletAddr as string;
     if (chatId && token) {
       return {
-        chat: await this.chatDal.findChatMessageUser(chatId,verifyWalletAddr),
+        chat: await this.chatDal.findChatMessageUser(chatId, verifyWalletAddr),
       };
     } else {
       return {
-        chat: "chatId or walletAddr not found",
+        chat: "chatId or token not found",
+      };
+    }
+  }
+  async getFindUserMessage(token: string) {
+    if (token) {
+      const verifyWalletAddr = security.jwt.token.verifyToken(token).token
+        ?.payload?.walletAddr as string;
+      return {
+        chat: await this.chatDal.findUserMessage(verifyWalletAddr),
+      };
+    } else {
+      return {
+        chat: "token not found",
       };
     }
   }
