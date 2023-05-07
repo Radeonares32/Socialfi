@@ -102,4 +102,20 @@ export class ChatService {
       };
     }
   }
+  async postCreateChatRoom(token: string, otherWalletAddr: string) {
+    const verifyWalletAddr = security.jwt.token.verifyToken(token).token
+      ?.payload?.walletAddr as string;
+    if (token && otherWalletAddr) {
+      return {
+        chat: await this.chatDal.createChatRoom(
+          verifyWalletAddr,
+          otherWalletAddr
+        ),
+      };
+    } else {
+      return {
+        chat: "token or otherWalletAddr not found",
+      };
+    }
+  }
 }
