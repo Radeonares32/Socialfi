@@ -51,4 +51,10 @@ export class ChatController {
       chat: (await this.chatService.getFindChatMessageUser(chatId,token)).chat,
     });
   };
+  getFindUserMessage: Handler = async (req, res) => {
+    const token = req.headers["x-access-token"] as string;
+    res.json({
+      chat: (await this.chatService.getFindUserMessage(token)).chat,
+    });
+  };
 }
