@@ -9,4 +9,10 @@ export class ChatController {
             chat:(await this.chatService.getFindAllChat()).chat
         })
     }
+    getFindChat:Handler = async (req,res) => {
+        const { chatId } = req.body
+        res.json({
+            chat:(await this.chatService.getFindChat(chatId)).chat
+        })
+    }
 }
