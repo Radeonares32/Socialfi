@@ -63,4 +63,11 @@ export class ChatController {
       chat: (await this.chatService.getFindMessageUser(messageId)).chat,
     });
   };
+  postCreateChatRoom: Handler = async (req, res) => {
+    const { otherWalletAddr } = req.body;
+    const token = req.headers["x-access-token"] as string;
+    res.json({
+      chat: (await this.chatService.postCreateChatRoom(token,otherWalletAddr)).chat,
+    });
+  };
 }
