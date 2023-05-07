@@ -1,6 +1,15 @@
+import { Server } from 'socket.io'
+
 import { security } from "../../../security/security";
 import { ChatDal } from "../Dal/chat.dal";
+import { server } from '../../../../server'
 
+
+const io = new Server(server, {
+  cors: {
+      origin: "*"
+  }
+})
 export class ChatService {
   private chatDal: ChatDal = new ChatDal();
 
@@ -122,13 +131,17 @@ export class ChatService {
     const verifyWalletAddr = security.jwt.token.verifyToken(token).token
       ?.payload?.walletAddr as string;
     if (token && chatId && message) {
-      return {
-        chat: await this.chatDal.createUserMessage(
-          chatId,
-          verifyWalletAddr,
-          message
-        ),
-      };
+      io.on('connection', (socket) => {
+        socket.on(chatId, async (data: any, cb: any) => {
+          return {
+            chat: await this.chatDal.createUserMessage(
+              chatId,
+              verifyWalletAddr,
+              data
+            ),
+          };
+        })
+    })
     } else {
       return {
         chat: "token or chatId or message not found",
