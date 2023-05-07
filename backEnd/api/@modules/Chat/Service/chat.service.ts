@@ -20,4 +20,9 @@ export class ChatService {
             }
         }
     }
+    async findAllMessage() {
+        return {
+            chat:await this.chatDal.findAllMessage()
+        }
+    }
 }
