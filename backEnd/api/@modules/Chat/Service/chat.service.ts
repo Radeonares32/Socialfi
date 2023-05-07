@@ -91,4 +91,15 @@ export class ChatService {
       };
     }
   }
+  async getFindMessageUser(messageId: string) {
+    if (messageId) {
+      return {
+        chat: await this.chatDal.findMessageUser(messageId),
+      };
+    } else {
+      return {
+        chat: "messageId not found",
+      };
+    }
+  }
 }
