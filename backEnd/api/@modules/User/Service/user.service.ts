@@ -139,4 +139,18 @@ export class UserService {
       ),
     };
   }
+  async userFollows(token: string) {
+    const verifyWalletAddr = security.jwt.token.verifyToken(token).token
+      ?.payload?.walletAddr as string;
+    return {
+      user: await this.userDataAccess.userFollows(verifyWalletAddr),
+    };
+  }
+  async userFollowers(token: string) {
+    const verifyWalletAddr = security.jwt.token.verifyToken(token).token
+      ?.payload?.walletAddr as string;
+    return {
+      user: await this.userDataAccess.userFollowers(verifyWalletAddr),
+    };
+  }
 }

@@ -114,4 +114,16 @@ export class UserController {
       user: (await this.userService.isFollowers(token, otherWalletAddr)).user,
     });
   };
+  userFollows: Handler = async (req, res) => {
+    const token = req.headers["x-access-token"] as string;
+    res.json({
+      user: (await this.userService.userFollows(token)).user,
+    });
+  };
+  userFollowers: Handler = async (req, res) => {
+    const token = req.headers["x-access-token"] as string;
+    res.json({
+      user: (await this.userService.userFollowers(token)).user,
+    });
+  };
 }

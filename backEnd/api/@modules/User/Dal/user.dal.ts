@@ -285,4 +285,34 @@ export class UserDal implements UserRepository {
       }
     });
   }
+  userFollows(walletAddr:string):Promise<IUser[]> {
+    return new Promise(async (resolve,reject)=> {
+      try {
+          const user = await neo4j()?.readCypher("match(u1:user) match(u:user) where u.id = $walletAddr and not (u)-[:FOLLOWERS]->(u1) return u1",{walletAddr}).catch(err=>console.log(err))
+          const rUser:any = user?.records.map((uss) => {
+            return uss.map((res) => {
+              return res;
+            });
+          });
+          resolve(rUser as IUser[])
+      } catch (err) {
+          reject({message:err})
+      }
+    })
+  }
+   userFollowers(walletAddr:string):Promise<IUser[]> {
+    return new Promise(async (resolve,reject)=> {
+      try {
+          const user = await neo4j()?.readCypher("match(u1:user) match(u:user) where u.id = $walletAddr and not (u)-[:FOLLOWERS]->(u1) return u1",{walletAddr}).catch(err=>console.log(err))
+          const rUser:any = user?.records.map((uss) => {
+            return uss.map((res) => {
+              return res;
+            });
+          });
+          resolve(rUser as IUser[])
+      } catch (err) {
+          reject({message:err})
+      }
+    })
+  }
 }

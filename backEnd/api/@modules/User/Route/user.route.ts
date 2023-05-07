@@ -12,6 +12,25 @@ export const getUserRoute: Handler = app.get(
   "/profile/:id",
   userController.getUser
 );
+
+//Post
+export const postUserRoute: Handler = app.post(
+  "/create",
+  userController.postUser
+);
+export const signWalletRoute: Handler = app.post(
+  "/signWallet",
+  userController.signWalletUser
+);
+export const loginWalletRoute: Handler = app.post(
+  "/loginWallet",
+  userController.loginWalletUser
+);
+export const postFollowRoute: Handler = app.post(
+  "/postFollow",
+  Middlewares.userAuth,
+  userController.postFollow
+);
 export const getFollowRoute: Handler = app.post(
   "/getFollow",
   Middlewares.userAuth,
@@ -32,25 +51,17 @@ export const getIsFollowersRoute: Handler = app.post(
   Middlewares.userAuth,
   userController.isFollowers
 );
-
-//Post
-export const postUserRoute: Handler = app.post(
-  "/create",
-  userController.postUser
-);
-export const signWalletRoute: Handler = app.post(
-  "/signWallet",
-  userController.signWalletUser
-);
-export const loginWalletRoute: Handler = app.post(
-  "/loginWallet",
-  userController.loginWalletUser
-);
-export const postFollowRoute: Handler = app.post(
-  "/postFollow",
+export const userFollowsRoute: Handler = app.post(
+  "/userFollows",
   Middlewares.userAuth,
-  userController.postFollow
+  userController.userFollows
 );
+export const userFollowersRoute: Handler = app.post(
+  "/userFollowers",
+  Middlewares.userAuth,
+  userController.userFollowers
+);
+
 
 //Put
 export const putUserRoute: Handler = app.put("/update", userController.putUser);
