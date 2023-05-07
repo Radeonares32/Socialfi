@@ -10,8 +10,10 @@ export const Flow = () => {
   const [post, setPosts] = useState<any>();
   const [description, setDescription] = useState<any>();
   const [user, setUser] = useState<any>();
-  const [follow, setFollow] = useState(0);
-  const [followers, setFollowers] = useState(0);
+  const [follow, setFollow] = useState<any>();
+  const [followers, setFollowers] = useState<any>();
+  const [getFollow,setGetFollow] = useState<any>()
+  const [getFollowers,setGetFollowers] = useState<any>()
   const fileClick = () => {
     if (fileRef.current) {
       fileRef.current.click();
@@ -60,39 +62,69 @@ export const Flow = () => {
       }
     }
   };
-  const isFollow = async (e: any) => {
-    console.log(e.target.id);
-    e.preventDefault();
-    const data = {
-      otherWalletAddr: e.target.id,
-    };
-    const follow:any = await axios.post(
-      "http://localhost:3000/user/getIsFollow",
-      data,
-      {
-        headers: { "x-access-token": auth().token },
-      }
-    );
-    const followers:any = await axios.post(
-      "http://localhost:3000/user/getIsFollowers",
-      data,
-      {
-        headers: { "x-access-token": auth().token },
-      }
-    );
-    setFollow(follow.data.user)
-    setFollowers(followers.data.user)
-  };
+  const clickFollow = async(e:any) => {
+    e.preventDefault()
+    await axios.post('http://localhost:3000/user/postFollow',{otherWalletAddr:e.target.id},{
+      headers:{'x-access-token':auth().token}
+    })
+  }
   useEffect(() => {
     axios.get("http://localhost:3000/post/").then((posts: any) => {
       setPosts(posts.data.post);
     });
   }, [postClick]);
   useEffect(() => {
-    axios.get("http://localhost:3000/user/").then((users: any) => {
-      setUser(users.data.user);
-    });
+    if (isAuth()) {
+      axios.get("http://localhost:3000/user/").then((users: any) => {
+        setUser(users.data.user);
+      });
+    }
   }, [isAuth()]);
+  useEffect(() => {
+    if (isAuth()) {
+      axios
+        .post(
+          "http://localhost:3000/user/userFollows",
+          {},
+          {
+            headers: { "x-access-token": auth().token },
+          }
+        )
+        .then((users: any) => {
+          setFollow(users.data.user);
+          
+        });
+    }
+  }, [clickFollow]);
+  useEffect(() => {
+    if (isAuth()) {
+      axios
+        .post(
+          "http://localhost:3000/user/userFollowers",
+          {},
+          {
+            headers: { "x-access-token": auth().token },
+          }
+        )
+        .then((users: any) => {
+          setFollowers(users.data.user);
+        });
+    }
+  }, [isAuth()]);
+  useEffect(()=>{
+    if(isAuth()) {
+      axios.post('http://localhost:3000/user/getFollow',{},{headers:{'x-access-token':auth().token}}).then((folls:any)=>{
+        setGetFollow(folls.data.user)
+      })
+    }
+  },[])
+  useEffect(()=>{
+    if(isAuth()) {
+      axios.post('http://localhost:3000/user/getFollowers',{},{headers:{'x-access-token':auth().token}}).then((folls:any)=>{
+        setGetFollowers(folls.data.user)
+      })
+    }
+  },[])
   return (
     <div className="main-content right-chat-active">
       <div className="middle-sidebar-bottom">
@@ -2013,7 +2045,7 @@ export const Flow = () => {
               <div className="card w-100 shadow-xss rounded-xxl border-0 mb-3">
                 <div className="card-body d-flex align-items-center p-4">
                   <h4 className="fw-700 mb-0 font-xssss text-grey-900">
-                    Friend Request
+                    Friend Connect
                   </h4>
                   <a
                     href="#"
@@ -2022,102 +2054,49 @@ export const Flow = () => {
                     See all
                   </a>
                 </div>
-                {user ? (
-                  user.map((users: any, key: any) => (
-                    <>
-                      {isAuth() ? (
-                        auth().id != users[0].id ? (
-                          <>
-                            <div
-                              key={key}
-                              className="card-body d-flex pt-4 ps-4 pe-4 pb-0 border-top-xs bor-0"
-                            >
-                              <figure className="avatar me-3">
-                                <img
-                                  src="https://via.placeholder.com/50x50.png"
-                                  alt="image"
-                                  className="shadow-sm rounded-circle w45"
-                                />
-                              </figure>
-                              <h4 className="fw-700 text-grey-900 font-xssss mt-1">
-                                {users[0].name} {users[0].surname}
-                                <span className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">
-                                  12 mutual friends
-                                </span>
-                              </h4>
-                            </div>
-                            <div className="card-body d-flex align-items-center pt-0 ps-4 pe-4 pb-4">
-                              {(follow == 1 && followers == 0) && (
-                                <a
-                                onClick={isFollow}
-                                href=""
-                                id={users[0].id}
-                                className="p-2 lh-20 w100 bg-primary-gradiant me-2 text-black text-center font-xssss fw-600 ls-1 rounded-xl"
-                              >
-                                
-                                Followers
-                              </a>
-                              )}
-                              {(follow == 0 && followers == 0) && (
-                                <a
-                                onClick={isFollow}
-                                href=""
-                                id={users[0].id}
-                                className="p-2 lh-20 w100 bg-primary-gradiant me-2 text-black text-center font-xssss fw-600 ls-1 rounded-xl"
-                              >
-                                
-                                Connect
-                              </a>
-                              )}
-                               {(follow == 0 && followers == 1) && (
-                                <a
-                                onClick={isFollow}
-                                href=""
-                                id={users[0].id}
-                                className="p-2 lh-20 w100 bg-primary-gradiant me-2 text-black text-center font-xssss fw-600 ls-1 rounded-xl"
-                              >
-                                
-                                Following
-                              </a>
-                              )}
-                              {(follow == 1 && followers == 1) && (
-                                <a
-                                onClick={isFollow}
-                                href=""
-                                id={users[0].id}
-                                className="p-2 lh-20 w100 bg-primary-gradiant me-2 text-black text-center font-xssss fw-600 ls-1 rounded-xl"
-                              >
-                                
-                                Connected
-                              </a>
-                              )}
-                            
-                             
-                              <a
-                                href="#"
-                                className="p-2 lh-20 w100 bg-grey text-grey-800 text-center font-xssss fw-600 ls-1 rounded-xl"
-                              >
-                                Delete
-                              </a>
-                            </div>
-                          </>
-                        ) : (
-                          <div></div>
-                        )
-                      ) : (
-                        <div></div>
-                      )}
-                    </>
-                  ))
-                ) : (
-                  <div>User Not Found</div>
-                )}
+                 { (follow && isAuth()) && follow.slice(1).map((fol:any, key:any) => (
+                  <>
+                   
+                    <div key={key} className="card-body d-flex pt-4 ps-4 pe-4 pb-0 border-top-xs bor-0">
+                      <figure className="avatar me-3">
+                        <img
+                          src="https://via.placeholder.com/50x50.png"
+                          alt="image"
+                          className="shadow-sm rounded-circle w45"
+                        />
+                      </figure>
+                      <h4 className="fw-700 text-grey-900 font-xssss mt-1">
+                        {fol[0].name} {fol[0].surname}
+                        <span className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">
+                          12 mutual friends
+                        </span>
+                      </h4>
+                    </div>
+                    <div className="card-body d-flex align-items-center pt-0 ps-4 pe-4 pb-4">
+                      <a
+                        id={fol[0].id}
+                        onClick={clickFollow}
+                        href=""
+                        className="p-2 lh-20 w100 bg-primary-gradiant me-2 text-black text-center font-xssss fw-600 ls-1 rounded-xl"
+                      >
+                        Connect
+                      </a>
+
+                      <a
+                        href="#"
+                        className="p-2 lh-20 w100 bg-grey text-grey-800 text-center font-xssss fw-600 ls-1 rounded-xl"
+                      >
+                        Delete
+                      </a>
+                    </div>
+                  </>
+                ))}
               </div>
 
               <div className="card w-100 shadow-xss rounded-xxl border-0 p-0 ">
                 <div className="card-body d-flex align-items-center p-4 mb-0">
                   <h4 className="fw-700 mb-0 font-xssss text-grey-900">
-                    Friend Request
+                    Friend Follow
                   </h4>
                   <a
                     href="#"
@@ -2126,68 +2105,68 @@ export const Flow = () => {
                     See all
                   </a>
                 </div>
-                <div className="card-body bg-transparent-card d-flex p-3 bg-greylight ms-3 me-3 rounded-3">
-                  <figure className="avatar me-2 mb-0">
-                    <img
-                      src="https://via.placeholder.com/50x50.png"
-                      alt="image"
-                      className="shadow-sm rounded-circle w45"
-                    />
-                  </figure>
-                  <h4 className="fw-700 text-grey-900 font-xssss mt-2">
-                    Anthony Daugloi{" "}
-                    <span className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">
-                      12 mutual friends
-                    </span>
-                  </h4>
-                  <a
-                    href="#"
-                    className="btn-round-sm bg-white text-grey-900 feather-chevron-right font-xss ms-auto mt-2"
-                  ></a>
-                </div>
-                <div
-                  className="card-body bg-transparent-card d-flex p-3 bg-greylight m-3 rounded-3"
-                  style={{ marginBottom: "0 !important" }}
-                >
-                  <figure className="avatar me-2 mb-0">
-                    <img
-                      src="https://via.placeholder.com/50x50.png"
-                      alt="image"
-                      className="shadow-sm rounded-circle w45"
-                    />
-                  </figure>
-                  <h4 className="fw-700 text-grey-900 font-xssss mt-2">
-                    {" "}
-                    David Agfree{" "}
-                    <span className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">
-                      12 mutual friends
-                    </span>
-                  </h4>
-                  <a
-                    href="#"
-                    className="btn-round-sm bg-white text-grey-900 feather-plus font-xss ms-auto mt-2"
-                  ></a>
-                </div>
-                <div className="card-body bg-transparent-card d-flex p-3 bg-greylight m-3 rounded-3">
-                  <figure className="avatar me-2 mb-0">
-                    <img
-                      src="https://via.placeholder.com/50x50.png"
-                      alt="image"
-                      className="shadow-sm rounded-circle w45"
-                    />
-                  </figure>
-                  <h4 className="fw-700 text-grey-900 font-xssss mt-2">
-                    Hugury Daugloi{" "}
-                    <span className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">
-                      12 mutual friends
-                    </span>
-                  </h4>
-                  <a
-                    href="#"
-                    className="btn-round-sm bg-white text-grey-900 feather-plus font-xss ms-auto mt-2"
-                  ></a>
-                </div>
+                {(getFollow && isAuth()) && getFollow.map((fol:any,key:any)=>(
+                   <div key={key} className="card-body bg-transparent-card d-flex p-3 bg-greylight ms-3 me-3 rounded-3">
+                   <figure className="avatar me-2 mb-0">
+                     <img
+                       src="https://via.placeholder.com/50x50.png"
+                       alt="image"
+                       className="shadow-sm rounded-circle w45"
+                     />
+                   </figure>
+                   <h4 className="fw-700 text-grey-900 font-xssss mt-2">
+                     {fol[0].name} {fol[0].surname}
+                     <span className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">
+                       12 mutual friends
+                     </span>
+                   </h4>
+                   <a
+                     href="#"
+                     className="btn-round-sm bg-white text-grey-900 feather-chevron-right font-xss ms-auto mt-2"
+                   ></a>
+                 </div>
+                ))}
+               
+                
               </div>
+
+              <div className="card w-100 shadow-xss rounded-xxl border-0 p-0 ">
+                <div className="card-body d-flex align-items-center p-4 mb-0">
+                  <h4 className="fw-700 mb-0 font-xssss text-grey-900">
+                    Friend Followers
+                  </h4>
+                  <a
+                    href="#"
+                    className="fw-600 ms-auto font-xssss text-primary"
+                  >
+                    See all
+                  </a>
+                </div>
+                {(getFollowers && isAuth()) && getFollowers.map((fol:any,key:any)=>(
+                   <div key={key} className="card-body bg-transparent-card d-flex p-3 bg-greylight ms-3 me-3 rounded-3">
+                   <figure className="avatar me-2 mb-0">
+                     <img
+                       src="https://via.placeholder.com/50x50.png"
+                       alt="image"
+                       className="shadow-sm rounded-circle w45"
+                     />
+                   </figure>
+                   <h4 className="fw-700 text-grey-900 font-xssss mt-2">
+                     {fol[0].name} {fol[0].surname}
+                     <span className="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">
+                       12 mutual friends
+                     </span>
+                   </h4>
+                   <a
+                     href="#"
+                     className="btn-round-sm bg-white text-grey-900 feather-chevron-right font-xss ms-auto mt-2"
+                   ></a>
+                 </div>
+                ))}
+               
+                
+              </div>
+
 
               <div className="card w-100 shadow-xss rounded-xxl border-0 mb-3 mt-3">
                 <div className="card-body d-flex align-items-center p-4">
