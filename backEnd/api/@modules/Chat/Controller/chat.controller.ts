@@ -26,4 +26,10 @@ export class ChatController {
             chat:(await this.chatService.getFindMessage(messageId)).chat
         })
     }
+    getFindUserChatRoom:Handler = async (req,res) => {
+        const { chatId } = req.body
+        res.json({
+            chat:(await this.chatService.getFindUserChatRoom(chatId)).chat
+        })
+    }
 }
