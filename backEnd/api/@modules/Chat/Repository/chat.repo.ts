@@ -14,7 +14,7 @@ export interface ChatRepository {
     chatId: string,
     walletAddr: string
   ): Promise<IChatMessage[]>;
-  createChatRoom(): Promise<{ message: string }>;
+  createChatRoom(walletAddr:string,otherWalletAddr:string): Promise<{ message: string }>;
   createUserMessage(
     chatId: string,
     walletAddr: string,
