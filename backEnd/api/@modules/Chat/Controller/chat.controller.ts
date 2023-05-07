@@ -20,4 +20,10 @@ export class ChatController {
             chat:(await this.chatService.getFindAllMessage()).chat
         })
     }
+    getFindMessage:Handler = async (req,res) => {
+        const { messageId } = req.body
+        res.json({
+            chat:(await this.chatService.getFindMessage(messageId)).chat
+        })
+    }
 }
