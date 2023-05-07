@@ -38,4 +38,10 @@ export class ChatController {
       chat: (await this.chatService.getFindChatRoomUser(token)).chat,
     });
   };
+  getFindChatMessages: Handler = async (req, res) => {
+    const { chatId } = req.body;
+    res.json({
+      chat: (await this.chatService.getFindChatMessages(chatId)).chat,
+    });
+  };
 }
