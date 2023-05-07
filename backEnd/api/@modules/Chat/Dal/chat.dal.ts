@@ -43,6 +43,16 @@ export class ChatDal implements ChatRepository {
   }
   findAllMessage(): Promise<IChatMessage[]> {
     return new Promise(async (resolve, reject) => {
+        const message: any = await neo4j()?.readCypher(
+            "match (m:message) return m",
+            {  }
+          );
+          const rMessage: any = message.records.map((uss: any) => {
+            return uss.map((res: any) => {
+              return res.properties;
+            });
+          });
+          resolve(rMessage as IChatMessage[])
       try {
       } catch (err) {
         reject({ message: err });
@@ -51,6 +61,16 @@ export class ChatDal implements ChatRepository {
   }
   findMessage(messageId: string): Promise<IChatMessage> {
     return new Promise(async (resolve, reject) => {
+        const message: any = await neo4j()?.readCypher(
+            "match (m:message {id:$messageId}) return m",
+            { messageId }
+          );
+          const rMessage: any = message.records.map((uss: any) => {
+            return uss.map((res: any) => {
+              return res.properties;
+            });
+          });
+          resolve(rMessage as IChatMessage)
       try {
       } catch (err) {
         reject({ message: err });
