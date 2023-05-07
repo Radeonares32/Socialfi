@@ -79,6 +79,16 @@ export class ChatDal implements ChatRepository {
   }
   findUserChatRoom(chatId: string): Promise<IUser> {
     return new Promise(async (resolve, reject) => {
+        const user: any = await neo4j()?.readCypher(
+            "match(c:chat {id:$chatId}) match(u:user) match(u)-[:userChatRel]->(c) return u",
+            { chatId }
+          );
+          const rUser:any = user.records.map((uss: any) => {
+            return uss.map((res: any) => {
+              return res.properties;
+            });
+          });
+          resolve(rUser as IUser);
       try {
       } catch (err) {
         reject({ message: err });
