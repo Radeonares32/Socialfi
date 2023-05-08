@@ -1,6 +1,9 @@
+import { Navbar } from "../home/navbar/Navbar";
+
 export const Chat = () => {
   return (
     <>
+      <Navbar />
       <nav className="navigation scroll-bar">
         <div className="container ps-0 pe-0">
           <div className="nav-content">
@@ -150,7 +153,6 @@ export const Chat = () => {
                 <div className="chat-wrapper pt-0 w-100 position-relative scroll-bar bg-white theme-dark-bg">
                   <div className="chat-body p-3 ">
                     <div className="messages-content pb-5">
-                      
                       <div className="message-item">
                         <div className="message-user">
                           <figure className="avatar">
@@ -161,7 +163,6 @@ export const Chat = () => {
                           </figure>
                           <div>
                             <h5>Byrom Guittet</h5>
-                            <div className="time">01:35 PM</div>
                           </div>
                         </div>
                         <div className="message-wrap">
@@ -179,102 +180,14 @@ export const Chat = () => {
                           </figure>
                           <div>
                             <h5>Byrom Guittet</h5>
-                            <div className="time">
-                              01:35 PM
-                              <i className="ti-double-check text-info"></i>
-                            </div>
                           </div>
                         </div>
-                        <div className="message-wrap">
+                        <div className="message-wrap text-black">
                           I want those files for you. I want you to send 1 PDF
                           and 1 image file.
                         </div>
                       </div>
 
-                      <div className="message-item">
-                        <div className="message-user">
-                          <figure className="avatar">
-                            <img
-                              src="https://via.placeholder.com/50x50.png"
-                              alt="image"
-                            />
-                          </figure>
-                          <div>
-                            <h5>Byrom Guittet</h5>
-                            <div className="time">01:35 PM</div>
-                          </div>
-                        </div>
-                        <div className="message-wrap">
-                          I've found some cool photos for our travel app.
-                        </div>
-                      </div>
-
-                      <div className="message-item outgoing-message">
-                        <div className="message-user">
-                          <figure className="avatar">
-                            <img
-                              src="https://via.placeholder.com/50x50.png"
-                              alt="image"
-                            />
-                          </figure>
-                          <div>
-                            <h5>Byrom Guittet</h5>
-                            <div className="time">
-                              01:35 PM
-                              <i className="ti-double-check text-info"></i>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="message-wrap">
-                          Hey mate! How are things going ?
-                        </div>
-                      </div>
-
-                      <div className="message-item">
-                        <div className="message-user">
-                          <figure className="avatar">
-                            <img
-                              src="https://via.placeholder.com/50x50.png"
-                              alt="image"
-                            />
-                          </figure>
-                          <div>
-                            <h5>Byrom Guittet</h5>
-                            <div className="time">01:35 PM</div>
-                          </div>
-                        </div>
-                        <figure>
-                          <img
-                            src="https://via.placeholder.com/300x300.png"
-                            className="w-25 img-fluid rounded-3"
-                            alt="image"
-                          />
-                        </figure>
-                      </div>
-
-                      <div className="message-item outgoing-message">
-                        <div className="message-user">
-                          <figure className="avatar">
-                            <img
-                              src="https://via.placeholder.com/50x50.png"
-                              alt="image"
-                            />
-                          </figure>
-                          <div>
-                            <h5>Byrom Guittet</h5>
-                            <div className="time">
-                              01:35 PM
-                              <i className="ti-double-check text-info"></i>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="message-wrap"
-                          style={{ marginBottom: "90px;" }}
-                        >
-                          Hey mate! How are things going ?
-                        </div>
-                      </div>
                       <div className="clearfix"></div>
                     </div>
                   </div>
@@ -284,14 +197,15 @@ export const Chat = () => {
                   style={{ width: "98%;" }}
                 >
                   <form className="chat-form">
-                    <button className="bg-grey float-left">
-                      <i className="ti-microphone text-grey-600"></i>
-                    </button>
                     <div className="form-group">
-                      <input type="text" placeholder="Start typing.." />
+                      <input
+                        type="text"
+                        placeholder="Start typing.."
+                        className="text-black"
+                      />
                     </div>
                     <button className="bg-current">
-                      <i className="ti-arrow-right text-white"></i>
+                      <i className="ti-arrow-right text-black"></i>
                     </button>
                   </form>
                 </div>

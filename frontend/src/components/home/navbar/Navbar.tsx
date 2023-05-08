@@ -201,7 +201,7 @@ export const Navbar = () => {
         </div>
       </div>
       {isAuth() ? (
-        <Link to="chat" className="p-2 text-center ms-3 menu-icon">
+        <Link to="/chat" className="p-2 text-center ms-3 menu-icon">
           <i className="feather-message-square font-xl text-current"></i>
         </Link>
       ) : (
