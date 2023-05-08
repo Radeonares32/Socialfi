@@ -23,4 +23,5 @@ export const getFindChatRoomUserRoute:Handler = app.post('/findChatRoomUser',Mid
 export const getFindChatMessagesRoute:Handler = app.post('/findChatMessages',Middlewares.userAuth,chatController.getFindChatMessages)
 export const getFindChatMessageUserRoute:Handler = app.post('/findChatMessageUser',Middlewares.userAuth,chatController.getFindChatMessageUser)
 export const getFindMessageUserRoute:Handler = app.post('/findMessageUser',Middlewares.userAuth,chatController.getFindMessageUser)
+export const getUserRoomRoute:Handler = app.post('/userRoom',Middlewares.userAuth,chatController.getUserRoom)
 

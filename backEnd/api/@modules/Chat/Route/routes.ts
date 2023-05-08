@@ -14,6 +14,7 @@ import {
   getFindUserMessageRoute,
   postCreateChatRoomRoute,
   postCreateUserMessageRoute,
+  getUserRoomRoute,
 } from "./chat.route";
 
 export const chatRoutes: Handler = app.use(
@@ -29,5 +30,6 @@ export const chatRoutes: Handler = app.use(
   getFindUserChatRoomRoute,
   getFindUserMessageRoute,
   postCreateChatRoomRoute,
-  postCreateUserMessageRoute
+  postCreateUserMessageRoute,
+  getUserRoomRoute
 );
