@@ -110,6 +110,19 @@ export class ChatService {
       };
     }
   }
+  async getUserRoom(token: string, otherWalletAddr: string) {
+    if (token && otherWalletAddr) {
+      const verifyWalletAddr = security.jwt.token.verifyToken(token).token
+        ?.payload?.walletAddr as string;
+      return {
+        chat: await this.chatDal.userRoom(verifyWalletAddr, otherWalletAddr),
+      };
+    } else {
+      return {
+        chat: "token or otherWalletAddr not found",
+      };
+    }
+  }
   async postCreateChatRoom(token: string, otherWalletAddr: string) {
     const verifyWalletAddr = security.jwt.token.verifyToken(token).token
       ?.payload?.walletAddr as string;
@@ -132,7 +145,7 @@ export class ChatService {
     if (token && chatId && message) {
       io.on("connection", (socket) => {
         socket.on(chatId, (data: any, cb: any) => {
-          io.emit(chatId,data)
+          io.emit(chatId, data);
         });
       });
       return {
