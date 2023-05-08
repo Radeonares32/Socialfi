@@ -33,7 +33,7 @@ export const Navbar = () => {
           expiresIn: 3600,
           authState: {
             id: accounts[0].address,
-            token:token.data.user.token as string
+            token: token.data.user.token as string,
           },
           tokenType: "Bearer",
         });
@@ -50,7 +50,7 @@ export const Navbar = () => {
     if (window.keplr) {
       window.keplr.disable(chainId);
       signOut();
-      navigate('/')
+      navigate("/");
     }
   };
 
@@ -60,7 +60,7 @@ export const Navbar = () => {
         <a href="default.html">
           <i className="feather-zap text-success display1-size me-2 ms-0"></i>
           <span className="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0">
-            Sociala.{" "}
+          Sharefium{" "}
           </span>{" "}
         </a>
         <a href="#" className="mob-menu ms-auto me-2 chat-active-btn">
@@ -200,10 +200,15 @@ export const Navbar = () => {
           </h6>
         </div>
       </div>
-      <a href="#" className="p-2 text-center ms-3 menu-icon chat-active-btn">
-        <i className="feather-message-square font-xl text-current"></i>
-      </a>
-      <div className="p-2 text-center ms-3 position-relative dropdown-menu-icon menu-icon cursor-pointer">
+      {isAuth() ? (
+        <Link to="/chat" className="p-2 text-center ms-3 menu-icon">
+          <i className="feather-message-square font-xl text-current"></i>
+        </Link>
+      ) : (
+        <div style={{ display: "none" }}></div>
+      )}
+
+      {/*  <div className="p-2 text-center ms-3 position-relative dropdown-menu-icon menu-icon cursor-pointer">
         <i className="feather-settings animation-spin d-inline-block font-xl text-current"></i>
         <div className="dropdown-menu-settings switchcolor-wrap">
           <h4 className="fw-700 font-sm mb-4">Settings</h4>
@@ -366,7 +371,7 @@ export const Navbar = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       {isAuth() ? (
         <>
           <a

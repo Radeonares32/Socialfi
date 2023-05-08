@@ -14,12 +14,16 @@ export interface ChatRepository {
     chatId: string,
     walletAddr: string
   ): Promise<IChatMessage[]>;
-  findUserMessage(walletAddr:string):Promise<IChatMessage[]>
-  findMessageUser(messageId:string):Promise<IUser>
-  createChatRoom(walletAddr:string,otherWalletAddr:string): Promise<{ message: string }>;
+  findUserMessage(walletAddr: string): Promise<IChatMessage[]>;
+  findMessageUser(messageId: string): Promise<IUser>;
+  createChatRoom(
+    walletAddr: string,
+    otherWalletAddr: string
+  ): Promise<{ message: string }>;
   createUserMessage(
     chatId: string,
     walletAddr: string,
     message: string
   ): Promise<{ message: string }>;
+  userRoom(walletAddr: string, otherWalletAddr: string): Promise<IChatRoom>;
 }

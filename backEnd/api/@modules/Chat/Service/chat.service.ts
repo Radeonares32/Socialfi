@@ -1,15 +1,14 @@
-import { Server } from 'socket.io'
+import { Server } from "socket.io";
 
 import { security } from "../../../security/security";
 import { ChatDal } from "../Dal/chat.dal";
-import { server } from '../../../../server'
-
+import { server } from "../../../../server";
 
 const io = new Server(server, {
   cors: {
-      origin: "*"
-  }
-})
+    origin: "*",
+  },
+});
 export class ChatService {
   private chatDal: ChatDal = new ChatDal();
 
@@ -111,6 +110,19 @@ export class ChatService {
       };
     }
   }
+  async getUserRoom(token: string, otherWalletAddr: string) {
+    if (token && otherWalletAddr) {
+      const verifyWalletAddr = security.jwt.token.verifyToken(token).token
+        ?.payload?.walletAddr as string;
+      return {
+        chat: await this.chatDal.userRoom(verifyWalletAddr, otherWalletAddr),
+      };
+    } else {
+      return {
+        chat: "token or otherWalletAddr not found",
+      };
+    }
+  }
   async postCreateChatRoom(token: string, otherWalletAddr: string) {
     const verifyWalletAddr = security.jwt.token.verifyToken(token).token
       ?.payload?.walletAddr as string;
@@ -131,17 +143,18 @@ export class ChatService {
     const verifyWalletAddr = security.jwt.token.verifyToken(token).token
       ?.payload?.walletAddr as string;
     if (token && chatId && message) {
-      io.on('connection', (socket) => {
-        socket.on(chatId, async (data: any, cb: any) => {
-          return {
-            chat: await this.chatDal.createUserMessage(
-              chatId,
-              verifyWalletAddr,
-              data
-            ),
-          };
-        })
-    })
+      io.on("connection", (socket) => {
+        socket.on(chatId, (data: any, cb: any) => {
+          io.emit(chatId, data);
+        });
+      });
+      return {
+        chat: await this.chatDal.createUserMessage(
+          chatId,
+          verifyWalletAddr,
+          message
+        ),
+      };
     } else {
       return {
         chat: "token or chatId or message not found",

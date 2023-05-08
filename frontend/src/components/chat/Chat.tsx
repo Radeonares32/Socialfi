@@ -1,143 +1,139 @@
+import io from "socket.io-client";
+
+import { Navbar } from "../home/navbar/Navbar";
+import { useEffect, useState } from "react";
+import { useIsAuthenticated, useAuthUser } from "react-auth-kit";
+import axios from "axios";
+
+const socket = io("http://localhost:3000");
+
 export const Chat = () => {
+  const auth: any = useAuthUser();
+  const [follow, setFollow] = useState<any>();
+  const [followers, setFollowers] = useState<any>();
+  const [chatIds, setChatId] = useState<any>();
+  const [chatMessage, setChatMessage] = useState<any>();
+  const [chatMessageUsers, setChatMessageUser] = useState<any>();
+  const [message, setMessage] = useState<any>();
+
+  useEffect(() => {
+    axios
+      .post(
+        "http://localhost:3000/user/getFollow",
+        {},
+        { headers: { "x-access-token": auth().token } }
+      )
+      .then((folls: any) => {
+        setFollow(folls.data.user);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .post(
+        "http://localhost:3000/user/getFollowers",
+        {},
+        { headers: { "x-access-token": auth().token } }
+      )
+      .then((folls: any) => {
+        setFollowers(folls.data.user);
+      });
+  }, []);
+  const clickPost = (e: any) => {
+    e.preventDefault();
+    axios.post(
+      "http://localhost:3000/chat/createUserMessage",
+      { chatId: chatIds, message: message },
+      { headers: { "x-access-token": auth().token } }
+    );
+  };
+  const clickFollows = async (e: any) => {
+    e.preventDefault();
+    const chatId = await axios.post(
+      "http://localhost:3000/chat/userRoom",
+      {
+        otherWalletAddr: e.target.id,
+      },
+      { headers: { "x-access-token": auth().token } }
+    );
+    setChatId(chatId.data.chat[0][0].id);
+  };
+  useEffect(() => {
+    axios
+      .post(
+        "http://localhost:3000/chat/findChatMessages",
+        { chatId: chatIds },
+        { headers: { "x-access-token": auth().token } }
+      )
+      .then((chatMessages: any) => {
+        setChatMessage(chatMessages.data.chat.reverse());
+      });
+
+    axios
+      .post(
+        "http://localhost:3000/chat/findChatMessageUser",
+        { chatId: chatIds },
+        { headers: { "x-access-token": auth().token } }
+      )
+      .then((chatUserMessage: any) => {
+        setChatMessageUser(chatUserMessage.data.chat.reverse());
+      });
+  }, [clickFollows]);
   return (
     <>
+      <Navbar />
+
       <nav className="navigation scroll-bar">
         <div className="container ps-0 pe-0">
           <div className="nav-content">
             <div className="nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1 mb-2 mt-2">
               <div className="nav-caption fw-600 font-xssss text-grey-500">
-                <span>New </span>Feeds
+                <span>Followers </span>
               </div>
               <ul className="mb-1 top-content">
-                <li className="logo d-none d-xl-block d-lg-block"></li>
-                <li>
-                  <a href="default.html" className="nav-content-bttn open-font">
-                    <i className="feather-tv btn-round-md bg-blue-gradiant me-3"></i>
-                    <span>Newsfeed</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="default-badge.html"
-                    className="nav-content-bttn open-font"
-                  >
-                    <i className="feather-award btn-round-md bg-red-gradiant me-3"></i>
-                    <span>Badges</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="default-storie.html"
-                    className="nav-content-bttn open-font"
-                  >
-                    <i className="feather-globe btn-round-md bg-gold-gradiant me-3"></i>
-                    <span>Explore Stories</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="default-group.html"
-                    className="nav-content-bttn open-font"
-                  >
-                    <i className="feather-zap btn-round-md bg-mini-gradiant me-3"></i>
-                    <span>Popular Groups</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="user-page.html"
-                    className="nav-content-bttn open-font"
-                  >
-                    <i className="feather-user btn-round-md bg-primary-gradiant me-3"></i>
-                    <span>Author Profile </span>
-                  </a>
-                </li>
+                {follow &&
+                  follow.map((fol: any, key: any) => (
+                    <li key={key}>
+                      <a
+                        href=""
+                        id={fol[0].id}
+                        onClick={clickFollows}
+                        className="nav-content-bttn open-font"
+                      >
+                        <span id={fol[0].id}>
+                          {fol[0].name} {fol[0].surname}
+                        </span>
+                      </a>
+                    </li>
+                  ))}
               </ul>
             </div>
-
-            <div className="nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1 mb-2">
+            <div className="nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1 mb-2 mt-2">
               <div className="nav-caption fw-600 font-xssss text-grey-500">
-                <span>More </span>Pages
+                <span>Followers </span>
               </div>
-              <ul className="mb-3">
-                <li>
-                  <a
-                    href="default-email-box.html"
-                    className="nav-content-bttn open-font"
-                  >
-                    <i className="font-xl text-current feather-inbox me-3"></i>
-                    <span>Email Box</span>
-                    <span className="circle-count bg-warning mt-1">584</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="default-hotel.html"
-                    className="nav-content-bttn open-font"
-                  >
-                    <i className="font-xl text-current feather-home me-3"></i>
-                    <span>Near Hotel</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="default-event.html"
-                    className="nav-content-bttn open-font"
-                  >
-                    <i className="font-xl text-current feather-map-pin me-3"></i>
-                    <span>Latest Event</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="default-live-stream.html"
-                    className="nav-content-bttn open-font"
-                  >
-                    <i className="font-xl text-current feather-youtube me-3"></i>
-                    <span>Live Stream</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div className="nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1">
-              <div className="nav-caption fw-600 font-xssss text-grey-500">
-                <span></span> Account
-              </div>
-              <ul className="mb-1">
-                <li className="logo d-none d-xl-block d-lg-block"></li>
-                <li>
-                  <a
-                    href="default-settings.html"
-                    className="nav-content-bttn open-font h-auto pt-2 pb-2"
-                  >
-                    <i className="font-sm feather-settings me-3 text-grey-500"></i>
-                    <span>Settings</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="default-analytics.html"
-                    className="nav-content-bttn open-font h-auto pt-2 pb-2"
-                  >
-                    <i className="font-sm feather-pie-chart me-3 text-grey-500"></i>
-                    <span>Analytics</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="default-message.html"
-                    className="nav-content-bttn open-font h-auto pt-2 pb-2"
-                  >
-                    <i className="font-sm feather-message-square me-3 text-grey-500"></i>
-                    <span>Chat</span>
-                    <span className="circle-count bg-warning mt-0">23</span>
-                  </a>
-                </li>
+              <ul className="mb-1 top-content">
+                {followers &&
+                  followers.map((fol: any, key: any) => (
+                    <li key={key}>
+                      <a
+                        href=""
+                        id={fol[0].id}
+                        onClick={clickFollows}
+                        className="nav-content-bttn open-font"
+                      >
+                        <span id={fol[0].id}>
+                          {fol[0].name} {fol[0].surname}
+                        </span>
+                      </a>
+                    </li>
+                  ))}
               </ul>
             </div>
           </div>
         </div>
       </nav>
+
       <div className="main-content right-chat-active">
         <div className="middle-sidebar-bottom">
           <div
@@ -149,130 +145,39 @@ export const Chat = () => {
                 <div className="chat-wrapper pt-0 w-100 position-relative scroll-bar bg-white theme-dark-bg">
                   <div className="chat-body p-3 ">
                     <div className="messages-content pb-5">
-                      <div className="message-item">
-                        <div className="message-user">
-                          <figure className="avatar">
-                            <img
-                              src="https://via.placeholder.com/50x50.png"
-                              alt="image"
-                            />
-                          </figure>
-                          <div>
-                            <h5>Byrom Guittet</h5>
-                            <div className="time">01:35 PM</div>
-                          </div>
-                        </div>
-                        <div className="message-wrap">
-                          I'm fine, how are you 😃
-                        </div>
-                      </div>
+                      {chatMessage &&
+                        chatMessage.map((mess: any, key: any) => (
+                          <>
+                            {chatMessageUsers ? (
+                              chatMessageUsers.map((usMess: any) => (
+                                <>
+                                  {usMess[0].id == mess[0].id ? (
+                                    <>
+                                
+                                    <div
+                                      className="message-item outgoing-message"
+                                      key={key}
+                                    >
+                                      <div className="message-wrap text-black">
+                                        {mess[0].message}
+                                      </div>
+                                    </div>
+                                    </>
+                                  ) : (
+                                    <div className="message-item">
+                                      <div className="message-wrap">
+                                        {mess[0].message}
+                                      </div>
+                                    </div>
+                                  )}
+                                </>
+                              ))
+                            ) : (
+                              <></>
+                            )}
+                          </>
+                        ))}
 
-                      <div className="message-item outgoing-message">
-                        <div className="message-user">
-                          <figure className="avatar">
-                            <img
-                              src="https://via.placeholder.com/50x50.png"
-                              alt="image"
-                            />
-                          </figure>
-                          <div>
-                            <h5>Byrom Guittet</h5>
-                            <div className="time">
-                              01:35 PM
-                              <i className="ti-double-check text-info"></i>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="message-wrap">
-                          I want those files for you. I want you to send 1 PDF
-                          and 1 image file.
-                        </div>
-                      </div>
-
-                      <div className="message-item">
-                        <div className="message-user">
-                          <figure className="avatar">
-                            <img
-                              src="https://via.placeholder.com/50x50.png"
-                              alt="image"
-                            />
-                          </figure>
-                          <div>
-                            <h5>Byrom Guittet</h5>
-                            <div className="time">01:35 PM</div>
-                          </div>
-                        </div>
-                        <div className="message-wrap">
-                          I've found some cool photos for our travel app.
-                        </div>
-                      </div>
-
-                      <div className="message-item outgoing-message">
-                        <div className="message-user">
-                          <figure className="avatar">
-                            <img
-                              src="https://via.placeholder.com/50x50.png"
-                              alt="image"
-                            />
-                          </figure>
-                          <div>
-                            <h5>Byrom Guittet</h5>
-                            <div className="time">
-                              01:35 PM
-                              <i className="ti-double-check text-info"></i>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="message-wrap">
-                          Hey mate! How are things going ?
-                        </div>
-                      </div>
-
-                      <div className="message-item">
-                        <div className="message-user">
-                          <figure className="avatar">
-                            <img
-                              src="https://via.placeholder.com/50x50.png"
-                              alt="image"
-                            />
-                          </figure>
-                          <div>
-                            <h5>Byrom Guittet</h5>
-                            <div className="time">01:35 PM</div>
-                          </div>
-                        </div>
-                        <figure>
-                          <img
-                            src="https://via.placeholder.com/300x300.png"
-                            className="w-25 img-fluid rounded-3"
-                            alt="image"
-                          />
-                        </figure>
-                      </div>
-
-                      <div className="message-item outgoing-message">
-                        <div className="message-user">
-                          <figure className="avatar">
-                            <img
-                              src="https://via.placeholder.com/50x50.png"
-                              alt="image"
-                            />
-                          </figure>
-                          <div>
-                            <h5>Byrom Guittet</h5>
-                            <div className="time">
-                              01:35 PM
-                              <i className="ti-double-check text-info"></i>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="message-wrap"
-                          style={{ marginBottom: "90px;" }}
-                        >
-                          Hey mate! How are things going ?
-                        </div>
-                      </div>
                       <div className="clearfix"></div>
                     </div>
                   </div>
@@ -281,16 +186,20 @@ export const Chat = () => {
                   className="chat-bottom dark-bg p-3 shadow-none theme-dark-bg"
                   style={{ width: "98%;" }}
                 >
-                  <form className="chat-form">
-                    <button className="bg-grey float-left">
-                      <i className="ti-microphone text-grey-600"></i>
-                    </button>
-                    <div className="form-group">
-                      <input type="text" placeholder="Start typing.." />
+                  <form className="chat-form form-group">
+                    <div className="">
+                      <input
+                        type="text"
+                        placeholder="Start typing.."
+                        onChange={(e) => setMessage(e.target.value)}
+                        value={message}
+                        className="text-black"
+                        style={{ width: "75%" }}
+                      />
+                      <button onClick={clickPost} className="bg-current">
+                        <i className="ti-arrow-right text-black"></i>
+                      </button>
                     </div>
-                    <button className="bg-current">
-                      <i className="ti-arrow-right text-white"></i>
-                    </button>
                   </form>
                 </div>
               </div>

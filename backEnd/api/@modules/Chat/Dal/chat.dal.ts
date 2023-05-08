@@ -221,6 +221,26 @@ export class ChatDal implements ChatRepository {
       }
     });
   }
+  userRoom(walletAddr: string, otherWalletAddr: string): Promise<IChatRoom> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const isRoom: any = await neo4j()
+          ?.readCypher(
+            "match(c:chat) match(u1:user {id:$walletAddr}) match(u2:user {id:$otherWalletAddr}) match(u1)-[isChat:userChatRel]->(c)<-[:userChatRel]-(u2) return c",
+            { walletAddr, otherWalletAddr }
+          )
+          .catch((err) => console.log(err));
+        const rIsRoom: any = isRoom?.records.map((uss: any) => {
+          return uss.map((res: any) => {
+            return res.properties;
+          });
+        });
+        resolve(rIsRoom as IChatRoom);
+      } catch (err) {
+        reject({ message: err });
+      }
+    });
+  }
   createChatRoom(
     walletAddr: string,
     otherWalletAddr: string
