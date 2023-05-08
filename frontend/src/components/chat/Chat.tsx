@@ -138,6 +138,7 @@ export const Chat = () => {
           </div>
         </div>
       </nav>
+
       <div className="main-content right-chat-active">
         <div className="middle-sidebar-bottom">
           <div
@@ -149,6 +150,7 @@ export const Chat = () => {
                 <div className="chat-wrapper pt-0 w-100 position-relative scroll-bar bg-white theme-dark-bg">
                   <div className="chat-body p-3 ">
                     <div className="messages-content pb-5">
+                      
                       <div className="message-item">
                         <div className="message-user">
                           <figure className="avatar">

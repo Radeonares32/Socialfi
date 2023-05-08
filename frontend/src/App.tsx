@@ -6,6 +6,7 @@ import { Routes, Route } from "react-router-dom";
 import {} from "react-auth-kit";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider, RequireAuth } from "react-auth-kit";
+import { Chat } from "./components/chat/Chat";
 
 function App() {
   return (
@@ -23,6 +24,14 @@ function App() {
             element={
               <RequireAuth loginPath={"/"}>
                 <Information />
+              </RequireAuth>
+            }
+          ></Route>
+          <Route
+            path="chat"
+            element={
+              <RequireAuth loginPath={"/"}>
+                <Chat />
               </RequireAuth>
             }
           ></Route>
