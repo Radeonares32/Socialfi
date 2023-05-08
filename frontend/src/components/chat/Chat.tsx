@@ -1,6 +1,14 @@
+import io from 'socket.io-client';
+
 import { Navbar } from "../home/navbar/Navbar";
 
+const socket = io('http://localhost:3000');
+
+
 export const Chat = () => {
+  socket.on('connection',()=>{
+    console.log("baglandi")
+  })
   return (
     <>
       <Navbar />
