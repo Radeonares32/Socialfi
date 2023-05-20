@@ -50,7 +50,7 @@ export const Navbar = () => {
     if (window.keplr) {
       window.keplr.disable(chainId);
       signOut();
-      navigate("/");
+      navigate("/"); 
     }
   };
 
