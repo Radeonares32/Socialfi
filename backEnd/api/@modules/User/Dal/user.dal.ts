@@ -212,9 +212,10 @@ export class UserDal implements UserRepository {
           .catch((err) => console.log(err));
         const rUser: any = user?.records.map((uss) => {
           return uss.map((res) => {
-            return res.properties;
+            return res;
           });
         });
+
         resolve(rUser[0][0].low as Number);
       } catch (err) {
         reject({ message: err });
@@ -247,20 +248,24 @@ export class UserDal implements UserRepository {
   ): Promise<{ message: string }> {
     return new Promise(async (resolve, reject) => {
       try {
-        const isFollow = await this.isFollow(walletAddr, otherWalletAddr)
-        const isFollowers = await this.isFollowers(otherWalletAddr, walletAddr)
-        if(isFollow == 1 && isFollowers == 1) {
-          resolve({ message: "Already following" });
-        }
-        else {
-          await neo4j()
-          ?.writeCypher(
-            "match (f1:user {id:$walletAddr}) match(f2:user {id:$otherWalletAddr}) create(f1)-[follow:FOLLOW]->(f2) create (f2)-[followers:FOLLOWERS]->(f1) ",
-            { walletAddr, otherWalletAddr }
-          )
-          .catch((err) => console.log(err));
+        const isFollow: any = await this.isFollow(walletAddr, otherWalletAddr);
 
-        resolve({ message: "Success following" });
+        const isFollowers: any = await this.isFollowers(
+          walletAddr,
+          otherWalletAddr
+        );
+
+        if (isFollow >= 1 || isFollowers >= 1) {
+          resolve({ message: "Already following" });
+        } else {
+          await neo4j()
+            ?.writeCypher(
+              "match (f1:user {id:$walletAddr}) match(f2:user {id:$otherWalletAddr}) create(f1)-[follow:FOLLOW]->(f2) create (f2)-[followers:FOLLOWERS]->(f1)",
+              { walletAddr, otherWalletAddr }
+            )
+            .catch((err) => console.log(err));
+
+          resolve({ message: "Success following" });
         }
       } catch (err) {
         reject({ message: err });
@@ -285,34 +290,44 @@ export class UserDal implements UserRepository {
       }
     });
   }
-  userFollows(walletAddr:string):Promise<IUser[]> {
-    return new Promise(async (resolve,reject)=> {
+  userFollows(walletAddr: string): Promise<IUser[]> {
+    return new Promise(async (resolve, reject) => {
       try {
-          const user = await neo4j()?.readCypher("match(u1:user) match(u:user) where u.id = $walletAddr and not (u)-[:FOLLOWERS]->(u1)  and not (u)-[:FOLLOW]->(u1) return u1",{walletAddr}).catch(err=>console.log(err))
-          const rUser:any = user?.records.map((uss) => {
-            return uss.map((res) => {
-              return res.properties;
-            });
+        const user = await neo4j()
+          ?.readCypher(
+            "match(u1:user) match(u:user) where u.id <> $walletAddr and not (u)-[:FOLLOWERS]->(u1)  and not (u)-[:FOLLOW]->(u1) return u",
+            { walletAddr }
+          )
+          .catch((err) => console.log(err));
+        const rUser: any = user?.records.map((uss) => {
+          return uss.map((res) => {
+            return res.properties;
           });
-          resolve(rUser as IUser[])
+        });
+        resolve(rUser as IUser[]);
       } catch (err) {
-          reject({message:err})
+        reject({ message: err });
       }
-    })
+    });
   }
-   userFollowers(walletAddr:string):Promise<IUser[]> {
-    return new Promise(async (resolve,reject)=> {
+  userFollowers(walletAddr: string): Promise<IUser[]> {
+    return new Promise(async (resolve, reject) => {
       try {
-          const user = await neo4j()?.readCypher("match(u1:user) match(u:user) where u.id = $walletAddr and not (u)-[:FOLLOWERS]->(u1)  and not (u)-[:FOLLOW]->(u1) return u1",{walletAddr}).catch(err=>console.log(err))
-          const rUser:any = user?.records.map((uss) => {
-            return uss.map((res) => {
-              return res.properties;
-            });
+        const user = await neo4j()
+          ?.readCypher(
+            "match(u1:user) match(u:user) where u.id <> $walletAddr and not (u)-[:FOLLOWERS]->(u1)  and not (u)-[:FOLLOW]->(u1) return u",
+            { walletAddr }
+          )
+          .catch((err) => console.log(err));
+        const rUser: any = user?.records.map((uss) => {
+          return uss.map((res) => {
+            return res.properties;
           });
-          resolve(rUser as IUser[])
+        });
+        resolve(rUser as IUser[]);
       } catch (err) {
-          reject({message:err})
+        reject({ message: err });
       }
-    })
+    });
   }
 }

@@ -89,6 +89,7 @@ export class UserController {
   postFollow: Handler = async (req, res) => {
     const token = req.headers["x-access-token"] as string;
     const { otherWalletAddr } = req.body;
+    
     res.json({
       user: (await this.userService.postFollow(token, otherWalletAddr)).user,
     });

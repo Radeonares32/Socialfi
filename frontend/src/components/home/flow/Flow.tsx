@@ -95,7 +95,7 @@ export const Flow = () => {
           
         });
     }
-  }, [clickFollow]);
+  },[isAuth,follow]);
   useEffect(() => {
     if (isAuth()) {
       axios
@@ -110,7 +110,7 @@ export const Flow = () => {
           setFollowers(users.data.user);
         });
     }
-  }, [isAuth()]);
+  }, [isAuth,followers]);
   useEffect(()=>{
     if(isAuth()) {
       axios.post('http://localhost:3000/user/getFollow',{},{headers:{'x-access-token':auth().token}}).then((folls:any)=>{
