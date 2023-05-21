@@ -5,16 +5,16 @@ import { useEffect, useState } from "react";
 import { useIsAuthenticated, useAuthUser } from "react-auth-kit";
 import axios from "axios";
 
-const socket = io("http://localhost:3000");
+const socket = io("http://localhost:3000",{  });
 
 export const Chat = () => {
+  
   const auth: any = useAuthUser();
   const [follow, setFollow] = useState<any>();
   const [followers, setFollowers] = useState<any>();
   const [chatIds, setChatId] = useState<any>();
-  const [chatMessage, setChatMessage] = useState<any>();
-  const [chatMessageUsers, setChatMessageUser] = useState<any>();
-  const [message, setMessage] = useState<any>();
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState<any>();
 
   useEffect(() => {
     axios
@@ -39,46 +39,44 @@ export const Chat = () => {
         setFollowers(folls.data.user);
       });
   }, []);
-  const clickPost = (e: any) => {
-    e.preventDefault();
-    axios.post(
-      "http://localhost:3000/chat/createUserMessage",
-      { chatId: chatIds, message: message },
-      { headers: { "x-access-token": auth().token } }
-    );
+  
+  const userChatClick = async (e: any) => {
+    e.preventDefault()
+    await axios.post("http://localhost:3000/chat/createChatRoom", { otherWalletAddr: e.target.id }, {
+      headers: { "x-access-token": auth().token }
+    })
+    const chatId = await axios.post("http://localhost:3000/chat/findChatRoomUser",{},{
+      headers:{"x-access-token":auth().token}
+    })
+    setChatId(chatId.data.chat[0][0].id)
+    
+  }
+   const Clickpost = async (e: any) => {
+    e.preventDefault()
+    socket.emit(chatIds,message)
+    const chat = await axios.post("http://localhost:3000/chat/createUserMessage",{chatId:chatIds,message},{
+      headers:{"x-access-token":auth().token}
+      
+    })
+  
+  useEffect(()=> {
+    const chat =  axios.post("http://localhost:3000/chat/findChatMessages",{chatId:chatIds},{
+      headers:{"x-access-token":auth().token}
+    }).then((data:any)=> {
+      setMessages(data.data.chat)
+    })
+    //setMessages()
+    
+  },[Clickpost])
+ 
+    
+    
+    setMessage('')
   };
-  const clickFollows = async (e: any) => {
-    e.preventDefault();
-    const chatId = await axios.post(
-      "http://localhost:3000/chat/userRoom",
-      {
-        otherWalletAddr: e.target.id,
-      },
-      { headers: { "x-access-token": auth().token } }
-    );
-    setChatId(chatId.data.chat[0][0].id);
-  };
-  useEffect(() => {
-    axios
-      .post(
-        "http://localhost:3000/chat/findChatMessages",
-        { chatId: chatIds },
-        { headers: { "x-access-token": auth().token } }
-      )
-      .then((chatMessages: any) => {
-        setChatMessage(chatMessages.data.chat.reverse());
-      });
+  
 
-    axios
-      .post(
-        "http://localhost:3000/chat/findChatMessageUser",
-        { chatId: chatIds },
-        { headers: { "x-access-token": auth().token } }
-      )
-      .then((chatUserMessage: any) => {
-        setChatMessageUser(chatUserMessage.data.chat.reverse());
-      });
-  }, [clickFollows]);
+console.log(messages)
+
   return (
     <>
       <Navbar />
@@ -95,9 +93,10 @@ export const Chat = () => {
                   follow.map((fol: any, key: any) => (
                     <li key={key}>
                       <a
+                        onClick={userChatClick}
                         href=""
                         id={fol[0].id}
-                        onClick={clickFollows}
+
                         className="nav-content-bttn open-font"
                       >
                         <span id={fol[0].id}>
@@ -118,8 +117,9 @@ export const Chat = () => {
                     <li key={key}>
                       <a
                         href=""
+                        onClick={userChatClick}
                         id={fol[0].id}
-                        onClick={clickFollows}
+
                         className="nav-content-bttn open-font"
                       >
                         <span id={fol[0].id}>
@@ -145,38 +145,23 @@ export const Chat = () => {
                 <div className="chat-wrapper pt-0 w-100 position-relative scroll-bar bg-white theme-dark-bg">
                   <div className="chat-body p-3 ">
                     <div className="messages-content pb-5">
-                      {chatMessage &&
-                        chatMessage.map((mess: any, key: any) => (
-                          <>
-                            {chatMessageUsers ? (
-                              chatMessageUsers.map((usMess: any) => (
-                                <>
-                                  {usMess[0].id == mess[0].id ? (
-                                    <>
-                                
-                                    <div
-                                      className="message-item outgoing-message"
-                                      key={key}
-                                    >
-                                      <div className="message-wrap text-black">
-                                        {mess[0].message}
-                                      </div>
-                                    </div>
-                                    </>
-                                  ) : (
-                                    <div className="message-item">
-                                      <div className="message-wrap">
-                                        {mess[0].message}
-                                      </div>
-                                    </div>
-                                  )}
-                                </>
-                              ))
-                            ) : (
-                              <></>
-                            )}
-                          </>
-                        ))}
+                      {messages }
+                        <div className="message-item outgoing-message"
+                          
+                    >
+                        <div className="message-wrap text-black">
+                          
+                        </div>
+                      </div>
+                      
+                      
+
+                      <div className="message-item">
+                        <div className="message-wrap">
+
+                        </div>
+                      </div>
+
 
                       <div className="clearfix"></div>
                     </div>
@@ -196,7 +181,7 @@ export const Chat = () => {
                         className="text-black"
                         style={{ width: "75%" }}
                       />
-                      <button onClick={clickPost} className="bg-current">
+                      <button onClick={Clickpost} className="bg-current">
                         <i className="ti-arrow-right text-black"></i>
                       </button>
                     </div>

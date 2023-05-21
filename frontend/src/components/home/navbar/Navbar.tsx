@@ -1,10 +1,13 @@
 import { SigningCosmosClient } from "@cosmjs/launchpad";
+import { Keplr  } from '@keplr-wallet/types'
 import { useSignIn, useSignOut, useIsAuthenticated } from "react-auth-kit";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 export const Navbar = () => {
+  
+  
   const navigate = useNavigate();
   const signIn = useSignIn();
   const signOut = useSignOut();
@@ -60,7 +63,7 @@ export const Navbar = () => {
         <a href="default.html">
           <i className="feather-zap text-success display1-size me-2 ms-0"></i>
           <span className="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0">
-          Sharefium{" "}
+          Sharepium{" "}
           </span>{" "}
         </a>
         <a href="#" className="mob-menu ms-auto me-2 chat-active-btn">

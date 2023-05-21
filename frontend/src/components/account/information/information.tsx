@@ -1,3 +1,5 @@
+
+
 import { Leftbar } from "../../home/leftbar/Leftbar";
 import { Navbar } from "../../home/navbar/Navbar";
 
@@ -14,6 +16,31 @@ export const Information = () => {
   const [gender, setGender] = useState();
   const [biography, setBiography] = useState();
 
+
+  
+  /*async function getWalletPublicKey(walletAddress: string): Promise<string> {
+    const url = `https://stargate.stargaze.network/auth/accounts/${walletAddress}`;
+  
+    try {
+      const response = await axios.get(url);
+      const publicKey = response.data.result.value.public_key;
+      return publicKey;
+    } catch (error) {
+      console.error('Hata:', error);
+      throw error;
+    }
+  }
+  
+  // Kullanım örneği
+  const walletAddress = auth().id;
+  getWalletPublicKey(walletAddress)
+    .then(publicKey => {
+      console.log('Cüzdanın Genel Anahtarı:', publicKey);
+    })
+    .catch(error => {
+      console.error('Hata:', error);
+    });
+*/
   useEffect(() => {
     if (isAuth()) {
       axios
