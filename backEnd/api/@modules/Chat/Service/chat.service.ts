@@ -140,20 +140,33 @@ export class ChatService {
     }
   }
   async postCreateUserMessage(chatId: string, token: string, message: string) {
+    var mess:any;
     const verifyWalletAddr = security.jwt.token.verifyToken(token).token
       ?.payload?.walletAddr as string;
     if (token && chatId && message) {
+      console.log(chatId)
       io.on("connection", (socket) => {
-        socket.on(chatId, (data: any, cb: any) => {
-          io.emit(chatId, data);
+
+        socket.on(chatId, (room:any) => {
+          socket.join(room)
+
+          socket.on(chatId,({room,message})=> {
+            io.to(room).emit(chatId,message)
+          })
+          socket.on('disconnect', () => {
+            console.log('Bir kullanıcı ayrıldı');
+          });
+          socket.on("connect",()=> {
+            console.log("connect")
+          })
+          socket.on("connect_error",(err:any)=>{
+            console.log(err)
+          })
+           
         });
       });
       return {
-        chat: await this.chatDal.createUserMessage(
-          chatId,
-          verifyWalletAddr,
-          message
-        ),
+        chat:(await this.chatDal.createUserMessage(chatId,verifyWalletAddr,message)).message
       };
     } else {
       return {
